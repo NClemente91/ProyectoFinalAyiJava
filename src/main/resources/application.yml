@@ -1,0 +1,30 @@
+# Se agregan las properties propias del proyecto
+#
+# MS Settings.
+#jdbc:mysql://localhost:3306/practica_jpa_comercio?serverTimezone=UTC
+spring:
+  # Datasource settings (se debe agregar la información de la base de datos local)
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_DATABASE}?serverTimezone=UTC
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+    hibernate:
+      ddl-auto: update
+    defer-datasource-initialization: 'true'
+#  sql:
+#    init:
+#      mode: always
+#      data-locations: classpath:data.sql
+
+# Swagger settings.
+springfox:
+  documentation:
+    swagger:
+      v2:
+        path: /swagger.json
