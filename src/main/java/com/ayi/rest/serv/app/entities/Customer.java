@@ -7,6 +7,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "customers")
@@ -38,6 +40,20 @@ public class Customer implements Serializable {
 
     @Column(name = "date_of_birth", nullable = false)
     private LocalDate dateOfBirth;
+
+    @OneToOne
+    @JoinColumn(name = "customer_detail_id")
+    private CustomerDetail customerDetail;
+
+    @OneToMany(mappedBy = "customer")
+    private List<Invoice> invoiceList = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(name = "tbl_customer_address",
+            joinColumns = @JoinColumn(name = "customer_id"),
+            inverseJoinColumns = @JoinColumn(name = "address_id")
+    )
+    private List<Address> addressList = new ArrayList<>();
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;

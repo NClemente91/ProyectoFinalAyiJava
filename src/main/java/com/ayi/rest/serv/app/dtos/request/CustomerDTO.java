@@ -39,14 +39,4 @@ public class CustomerDTO implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
 
-    @ApiModelProperty(position = 5, notes = "Non negative value, CreatedAt is required.")
-    @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDateTime createdAt;
-
-    @ApiModelProperty(position = 6, notes = "Non negative value, UpdatedAt is not required.")
-    @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDateTime updatedAt;
-
 }

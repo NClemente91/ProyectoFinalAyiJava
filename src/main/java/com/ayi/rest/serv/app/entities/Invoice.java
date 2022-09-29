@@ -35,6 +35,10 @@ public class Invoice implements Serializable {
     @Column(name = "total", nullable = false)
     private Double total;
 
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 

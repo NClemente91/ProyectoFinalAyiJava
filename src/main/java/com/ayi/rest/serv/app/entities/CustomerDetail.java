@@ -32,6 +32,10 @@ public class CustomerDetail implements Serializable {
     @Column(name = "score", nullable = false)
     private Integer score;
 
+    @OneToOne(mappedBy = "customerDetail")
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 

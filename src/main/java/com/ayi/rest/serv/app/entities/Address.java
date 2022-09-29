@@ -6,6 +6,8 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "addresses")
@@ -46,6 +48,9 @@ public class Address implements Serializable {
 
     @Column(name = "country", nullable = false, length = 50)
     private String country;
+
+    @ManyToMany(mappedBy = "addressList")
+    private List<Customer> customerList = new ArrayList<>();
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;

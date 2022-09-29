@@ -30,7 +30,6 @@ public class AddressDTO implements Serializable {
     private Integer streetNumber;
 
     @ApiModelProperty(position = 3, notes = "Non negative value, Apartment is not required.")
-    @NotNull
     private String apartment;
 
     @ApiModelProperty(position = 4, notes = "Non negative value, Postcode is required.")
@@ -48,15 +47,5 @@ public class AddressDTO implements Serializable {
     @ApiModelProperty(position = 7, notes = "Non negative value, Country is required.")
     @NotNull
     private String country;
-
-    @ApiModelProperty(position = 8, notes = "Non negative value, CreatedAt is required.")
-    @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDateTime createdAt;
-
-    @ApiModelProperty(position = 9, notes = "Non negative value, UpdatedAt is required.")
-    @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDateTime updatedAt;
 
 }
