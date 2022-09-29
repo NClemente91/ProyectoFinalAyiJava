@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
-public class InvoiceMapperImpl implements IInvoiceMapper {
+public class InvoiceMapperImpl extends Exception implements IInvoiceMapper {
 
     private final ModelMapper modelMapper;
 

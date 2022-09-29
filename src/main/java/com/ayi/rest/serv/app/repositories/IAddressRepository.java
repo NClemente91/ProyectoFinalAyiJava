@@ -1,4 +1,7 @@
 package com.ayi.rest.serv.app.repositories;
 
-public interface IAddressRepository {
+import com.ayi.rest.serv.app.entities.Address;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface IAddressRepository extends JpaRepository<Address, Long> {
 }

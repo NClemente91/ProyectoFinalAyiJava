@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
-public class CustomerDetailMapperImpl implements ICustomerDetailMapper {
+public class CustomerDetailMapperImpl extends Exception implements ICustomerDetailMapper {
 
     private final ModelMapper modelMapper;
 
