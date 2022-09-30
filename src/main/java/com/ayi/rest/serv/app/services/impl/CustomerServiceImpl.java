@@ -6,7 +6,6 @@ import com.ayi.rest.serv.app.mappers.ICustomerMapper;
 import com.ayi.rest.serv.app.repositories.ICustomerRepository;
 import com.ayi.rest.serv.app.services.ICustomerService;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,9 +14,8 @@ import java.util.List;
 
 @AllArgsConstructor
 @Service
-@Slf4j
 @Transactional
-public class CustomerServiceImpl extends Exception implements ICustomerService {
+public class CustomerServiceImpl implements ICustomerService {
 
     @Autowired
     private ICustomerRepository customerRepository;

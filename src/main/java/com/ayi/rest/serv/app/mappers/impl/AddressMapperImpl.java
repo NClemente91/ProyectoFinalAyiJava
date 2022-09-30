@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
-public class AddressMapperImpl extends Exception implements IAddressMapper {
+public class AddressMapperImpl implements IAddressMapper {
 
     private final ModelMapper modelMapper;
 

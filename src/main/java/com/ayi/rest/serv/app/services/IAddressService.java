@@ -12,7 +12,7 @@ public interface IAddressService {
 
     AddressResponseDTO createAddress(AddressDTO addressDTO);
 
-    AddressResponseDTO updateAddress(AddressDTO addressDTO);
+    AddressResponseDTO updateAddress(AddressDTO addressDTO, Long id);
 
     void deleteAddressById(Long id);
 }
