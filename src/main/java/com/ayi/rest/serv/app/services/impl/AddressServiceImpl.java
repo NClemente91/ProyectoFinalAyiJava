@@ -3,6 +3,7 @@ package com.ayi.rest.serv.app.services.impl;
 import com.ayi.rest.serv.app.dtos.request.AddressDTO;
 import com.ayi.rest.serv.app.dtos.response.AddressResponseDTO;
 import com.ayi.rest.serv.app.entities.Address;
+import com.ayi.rest.serv.app.exceptions.NotFoundException;
 import com.ayi.rest.serv.app.mappers.IAddressMapper;
 import com.ayi.rest.serv.app.repositories.IAddressRepository;
 import com.ayi.rest.serv.app.services.IAddressService;
@@ -38,6 +39,8 @@ public class AddressServiceImpl implements IAddressService {
 
         List<Address> addressList = addressRepository.findAll();
 
+        //Si no hay datos 204
+
         for(Address a:addressList){
             addressResponseDTOList.add(addressMapper.entityToResponseDto(a));
         }
@@ -55,6 +58,10 @@ public class AddressServiceImpl implements IAddressService {
 
         Optional<Address> optionalAddress = addressRepository.findById(id);
 
+        if (optionalAddress.isEmpty()){
+            throw new NotFoundException("El registro con id " + id + " no existe");
+        }
+
         return addressMapper.entityToResponseDto(optionalAddress.get());
 
     }
@@ -68,6 +75,8 @@ public class AddressServiceImpl implements IAddressService {
     public AddressResponseDTO createAddress(AddressDTO addressDTO){
 
         AddressResponseDTO addressResponseDTO;
+
+        //Si addressDTO existe y tiene los datos correctos
 
         Address addressToCreate = addressMapper.requestDtoToEntity(addressDTO);
         addressToCreate.setCreatedAt(LocalDateTime.now());
@@ -89,8 +98,13 @@ public class AddressServiceImpl implements IAddressService {
 
         AddressResponseDTO addressResponseDTO;
 
+        //Id del tipo correcto
+
+        //Si addressDTO existe y tiene los datos correctos
+
         Optional<Address> optionalAddress = addressRepository.findById(id);
 
+        //Si existe el registro
         if(optionalAddress.isEmpty()){
             throw new RuntimeException();
         }
@@ -115,8 +129,11 @@ public class AddressServiceImpl implements IAddressService {
     @Override
     public void deleteAddressById(Long id){
 
+        //Id del tipo correcto
+
         Optional<Address> optionalAddress = addressRepository.findById(id);
 
+        //Si existe el registro
         if(optionalAddress.isEmpty()){
             throw new RuntimeException();
         }

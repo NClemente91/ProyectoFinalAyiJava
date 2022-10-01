@@ -66,7 +66,7 @@ public class AddressController {
                     code = 204,
                     message = "Body content empty")
     })
-    public ResponseEntity<AddressResponseDTO> findOneAddress(
+    public ResponseEntity<?> findOneAddress(
             @ApiParam(name = "id", required = true, value = "Id", example = "1")
             @PathVariable("id") Long id) {
 
