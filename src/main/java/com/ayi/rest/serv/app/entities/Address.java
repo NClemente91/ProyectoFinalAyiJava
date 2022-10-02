@@ -2,6 +2,8 @@ package com.ayi.rest.serv.app.entities;
 
 import io.swagger.annotations.ApiModel;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,6 +13,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "addresses")
+@SQLDelete(sql = "UPDATE addresses SET deleted = true WHERE address_id=?")
+@Where(clause = "deleted=false")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -48,6 +52,9 @@ public class Address implements Serializable {
 
     @Column(name = "country", nullable = false, length = 50)
     private String country;
+
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted = false;
 
     @ManyToMany(mappedBy = "addressList")
     private List<Customer> customerList = new ArrayList<>();

@@ -2,15 +2,21 @@ package com.ayi.rest.serv.app.services.impl;
 
 import com.ayi.rest.serv.app.dtos.request.AddressDTO;
 import com.ayi.rest.serv.app.dtos.response.AddressResponseDTO;
+import com.ayi.rest.serv.app.dtos.response.PagesResponseDTO;
 import com.ayi.rest.serv.app.entities.Address;
+import com.ayi.rest.serv.app.exceptions.BadRequestException;
 import com.ayi.rest.serv.app.exceptions.NotFoundException;
 import com.ayi.rest.serv.app.mappers.IAddressMapper;
 import com.ayi.rest.serv.app.repositories.IAddressRepository;
 import com.ayi.rest.serv.app.services.IAddressService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,22 +36,32 @@ public class AddressServiceImpl implements IAddressService {
 
     /**
      * Method that returns a list of addresses
-     * @return List<AddressResponseDTO>
+     * @param page Page number (Default 0)
+     * @param size Page size (Default 10)
+     * @return PagesResponseDTO<AddressResponseDTO>
      */
     @Override
-    public List<AddressResponseDTO> findAllAddresses(){
+    public PagesResponseDTO<AddressResponseDTO> findAllAddresses(Integer page, Integer size){
 
-        List<AddressResponseDTO> addressResponseDTOList = new ArrayList<>();
+        PagesResponseDTO<AddressResponseDTO> addressPageResponseDTO = new PagesResponseDTO<AddressResponseDTO>();
 
-        List<Address> addressList = addressRepository.findAll();
+        Pageable pageable = PageRequest.of(page, size);
 
-        //Si no hay datos 204
+        Page<Address> addressPageList = addressRepository.findAll(pageable);
 
-        for(Address a:addressList){
-            addressResponseDTOList.add(addressMapper.entityToResponseDto(a));
+        if (addressPageList.isEmpty()){
+            throw new NotFoundException("There are no records related to addresses");
         }
 
-        return addressResponseDTOList;
+        for(Address a:addressPageList){
+            addressPageResponseDTO.getEntityResponseDTOs().add(addressMapper.entityToResponseDto(a));
+        }
+        addressPageResponseDTO.setTotalPages(addressPageList.getTotalPages());
+        addressPageResponseDTO.setCurrentPage(addressPageList.getNumber() + 1);
+        addressPageResponseDTO.setPageSize(addressPageList.getSize());
+        addressPageResponseDTO.setTotalElements((int) addressPageList.getTotalElements());
+
+        return addressPageResponseDTO;
     }
 
     /**
@@ -76,7 +92,18 @@ public class AddressServiceImpl implements IAddressService {
 
         AddressResponseDTO addressResponseDTO;
 
-        //Si addressDTO existe y tiene los datos correctos
+        if (ObjectUtils.isEmpty(addressDTO)) {
+            throw new BadRequestException("Empty data in the entered entity");
+        }
+        long repeatedAddress = addressRepository.repeatedAddressValidation(
+                addressDTO.getStreet(),
+                addressDTO.getStreetNumber(),
+                addressDTO.getApartment()
+        );
+
+        if (repeatedAddress > 0) {
+            throw new BadRequestException("Existing address");
+        }
 
         Address addressToCreate = addressMapper.requestDtoToEntity(addressDTO);
         addressToCreate.setCreatedAt(LocalDateTime.now());
@@ -98,15 +125,23 @@ public class AddressServiceImpl implements IAddressService {
 
         AddressResponseDTO addressResponseDTO;
 
-        //Id del tipo correcto
+        if (ObjectUtils.isEmpty(addressDTO)) {
+            throw new BadRequestException("Empty data in the entered entity");
+        }
+        long repeatedAddress = addressRepository.repeatedAddressValidation(
+                addressDTO.getStreet(),
+                addressDTO.getStreetNumber(),
+                addressDTO.getApartment()
+        );
 
-        //Si addressDTO existe y tiene los datos correctos
+        if (repeatedAddress > 0) {
+            throw new BadRequestException("Existing address");
+        }
 
         Optional<Address> optionalAddress = addressRepository.findById(id);
 
-        //Si existe el registro
         if(optionalAddress.isEmpty()){
-            throw new RuntimeException();
+            throw new NotFoundException("Address to update not found");
         }
 
         Address addressToUpdate = addressMapper.requestDtoToEntity(addressDTO);
@@ -129,13 +164,10 @@ public class AddressServiceImpl implements IAddressService {
     @Override
     public void deleteAddressById(Long id){
 
-        //Id del tipo correcto
-
         Optional<Address> optionalAddress = addressRepository.findById(id);
 
-        //Si existe el registro
         if(optionalAddress.isEmpty()){
-            throw new RuntimeException();
+            throw new NotFoundException("Address to delete not found");
         }
 
         addressRepository.delete(optionalAddress.get());

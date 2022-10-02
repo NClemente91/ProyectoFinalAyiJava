@@ -2,6 +2,7 @@ package com.ayi.rest.serv.app.controllers;
 
 import com.ayi.rest.serv.app.dtos.request.AddressDTO;
 import com.ayi.rest.serv.app.dtos.response.AddressResponseDTO;
+import com.ayi.rest.serv.app.dtos.response.PagesResponseDTO;
 import com.ayi.rest.serv.app.services.IAddressService;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
@@ -39,9 +40,13 @@ public class AddressController {
                     code = 204,
                     message = "Body content empty")
     })
-    public ResponseEntity<List<AddressResponseDTO>> findAllAddresses() {
+    public ResponseEntity<PagesResponseDTO<AddressResponseDTO>> findAllAddresses(
+            @ApiParam(value = "Page to display", required = true, example = "0")
+            @RequestParam(value = "page", defaultValue = "0", required = false) Integer page,
+            @ApiParam(value = "Number of elements per page", required = true, example = "10")
+            @RequestParam(value = "size", defaultValue = "10", required = false) Integer size) {
 
-        List<AddressResponseDTO> addressList = addressService.findAllAddresses();
+        PagesResponseDTO<AddressResponseDTO> addressList = addressService.findAllAddresses(page, size);
 
         return new ResponseEntity<>(addressList, HttpStatus.OK);
 
