@@ -1,8 +1,11 @@
 package com.ayi.rest.serv.app.mappers.impl;
 
 import com.ayi.rest.serv.app.dtos.request.CustomerDTO;
+import com.ayi.rest.serv.app.dtos.response.CustomerDetailResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.CustomerResponseDTO;
+import com.ayi.rest.serv.app.dtos.response.CustomerWithDetailResponseDTO;
 import com.ayi.rest.serv.app.entities.Customer;
+import com.ayi.rest.serv.app.entities.CustomerDetail;
 import com.ayi.rest.serv.app.mappers.ICustomerMapper;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -29,6 +32,25 @@ public class CustomerMapperImpl implements ICustomerMapper {
         Customer customerEntity = new Customer();
         modelMapper.map(requestDto, customerEntity);
         return customerEntity;
+
+    }
+
+    @Override
+    public CustomerWithDetailResponseDTO entitiesToCustomerWithResponseDto(Customer customer, CustomerDetail customerDetail) {
+
+        CustomerDetailResponseDTO customerDetailResponseDTO = new CustomerDetailResponseDTO();
+        modelMapper.map(customerDetail, customerDetailResponseDTO);
+
+        return CustomerWithDetailResponseDTO.builder()
+                .customerId(customer.getCustomerId())
+                .name(customer.getName())
+                .lastName(customer.getLastName())
+                .dni(customer.getDni())
+                .dateOfBirth(customer.getDateOfBirth())
+                .createdAt(customer.getCreatedAt())
+                .updatedAt(customer.getUpdatedAt())
+                .detail(customerDetailResponseDTO)
+                .build();
 
     }
 

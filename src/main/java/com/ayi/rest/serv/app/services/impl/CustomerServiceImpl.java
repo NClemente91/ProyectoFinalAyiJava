@@ -1,13 +1,19 @@
 package com.ayi.rest.serv.app.services.impl;
 
 import com.ayi.rest.serv.app.dtos.request.CustomerDTO;
+import com.ayi.rest.serv.app.dtos.request.CustomerWithDetailDTO;
 import com.ayi.rest.serv.app.dtos.response.CustomerResponseDTO;
+import com.ayi.rest.serv.app.dtos.response.CustomerWithDetailResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.PagesResponseDTO;
 import com.ayi.rest.serv.app.entities.Customer;
+import com.ayi.rest.serv.app.entities.CustomerDetail;
 import com.ayi.rest.serv.app.exceptions.BadRequestException;
 import com.ayi.rest.serv.app.exceptions.NotFoundException;
+import com.ayi.rest.serv.app.mappers.ICustomerDetailMapper;
 import com.ayi.rest.serv.app.mappers.ICustomerMapper;
+import com.ayi.rest.serv.app.repositories.ICustomerDetailRepository;
 import com.ayi.rest.serv.app.repositories.ICustomerRepository;
+import com.ayi.rest.serv.app.services.ICustomerDetailService;
 import com.ayi.rest.serv.app.services.ICustomerService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +37,16 @@ public class CustomerServiceImpl implements ICustomerService {
     private ICustomerRepository customerRepository;
 
     @Autowired
+    private ICustomerDetailService customerDetailService;
+
+    @Autowired
+    private ICustomerDetailRepository customerDetailRepository;
+
+    @Autowired
     private ICustomerMapper customerMapper;
+
+    @Autowired
+    private ICustomerDetailMapper customerDetailMapper;
 
     /**
      * Method that returns a list of customers
@@ -107,6 +122,37 @@ public class CustomerServiceImpl implements ICustomerService {
         customerResponseDTO = customerMapper.entityToResponseDto(customerRepository.save(customerToCreate));
 
         return customerResponseDTO;
+
+    }
+
+    /**
+     * Method that creates a customer with detail passed by parameter
+     * @param customerWithDetailDTO Customer to create
+     * @return CustomerWithDetailResponseDTO
+     */
+    @Override
+    public CustomerWithDetailResponseDTO createCustomerWithDetail(CustomerWithDetailDTO customerWithDetailDTO){
+
+        if (ObjectUtils.isEmpty(customerWithDetailDTO)) {
+            throw new BadRequestException("Empty data in the entered entity");
+        }
+
+        Customer customerByDni = customerRepository.findByDni(customerWithDetailDTO.getCustomer().getDni());
+
+        if (customerByDni != null) {
+            throw new BadRequestException("Existing customer");
+        }
+
+        Customer customerToCreate = customerMapper.requestDtoToEntity(customerWithDetailDTO.getCustomer());
+        CustomerDetail customerDetail = customerDetailMapper.requestDtoToEntity(customerWithDetailDTO.getDetail());
+        customerDetail.setCreatedAt(LocalDateTime.now());
+
+        customerToCreate.setCustomerDetail(customerDetail);
+        customerToCreate.setCreatedAt(LocalDateTime.now());
+
+        Customer customerCreated = customerRepository.save(customerToCreate);
+
+        return customerMapper.entitiesToCustomerWithResponseDto(customerCreated, customerDetail);
 
     }
 
