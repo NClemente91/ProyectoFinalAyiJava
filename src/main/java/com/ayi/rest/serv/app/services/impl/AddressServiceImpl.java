@@ -19,8 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -75,7 +73,7 @@ public class AddressServiceImpl implements IAddressService {
         Optional<Address> optionalAddress = addressRepository.findById(id);
 
         if (optionalAddress.isEmpty()){
-            throw new NotFoundException("El registro con id " + id + " no existe");
+            throw new NotFoundException("Record with id " + id + " does not exist");
         }
 
         return addressMapper.entityToResponseDto(optionalAddress.get());
@@ -95,10 +93,12 @@ public class AddressServiceImpl implements IAddressService {
         if (ObjectUtils.isEmpty(addressDTO)) {
             throw new BadRequestException("Empty data in the entered entity");
         }
+
         long repeatedAddress = addressRepository.repeatedAddressValidation(
                 addressDTO.getStreet(),
                 addressDTO.getStreetNumber(),
-                addressDTO.getApartment()
+                addressDTO.getApartment(),
+                addressDTO.getCity()
         );
 
         if (repeatedAddress > 0) {
@@ -128,10 +128,12 @@ public class AddressServiceImpl implements IAddressService {
         if (ObjectUtils.isEmpty(addressDTO)) {
             throw new BadRequestException("Empty data in the entered entity");
         }
+
         long repeatedAddress = addressRepository.repeatedAddressValidation(
                 addressDTO.getStreet(),
                 addressDTO.getStreetNumber(),
-                addressDTO.getApartment()
+                addressDTO.getApartment(),
+                addressDTO.getCity()
         );
 
         if (repeatedAddress > 0) {

@@ -2,17 +2,17 @@ package com.ayi.rest.serv.app.services;
 
 import com.ayi.rest.serv.app.dtos.request.CustomerDetailDTO;
 import com.ayi.rest.serv.app.dtos.response.CustomerDetailResponseDTO;
+import com.ayi.rest.serv.app.dtos.response.PagesResponseDTO;
 
-import java.util.List;
+public interface ICustomerDetailService {
 
-public interface ICustumerDetailService {
-    List<CustomerDetailResponseDTO> findAllCustomersDetails();
+    PagesResponseDTO<CustomerDetailResponseDTO> findAllCustomersDetails(Integer page, Integer size);
 
     CustomerDetailResponseDTO findCustomerDetailById(Long id);
 
     CustomerDetailResponseDTO createCustomerDetail(CustomerDetailDTO customerDetailDTO);
 
-    CustomerDetailResponseDTO updateCustomerDetail(CustomerDetailDTO customerDetailDTO);
+    CustomerDetailResponseDTO updateCustomerDetail(CustomerDetailDTO customerDetailDTO, Long id);
 
     void deleteCustomerDetailById(Long id);
 }

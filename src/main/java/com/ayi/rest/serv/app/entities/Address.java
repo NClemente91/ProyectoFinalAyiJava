@@ -53,11 +53,11 @@ public class Address implements Serializable {
     @Column(name = "country", nullable = false, length = 50)
     private String country;
 
-    @Column(name = "deleted", nullable = false)
-    private boolean deleted = false;
-
     @ManyToMany(mappedBy = "addressList")
     private List<Customer> customerList = new ArrayList<>();
+
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted = false;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;

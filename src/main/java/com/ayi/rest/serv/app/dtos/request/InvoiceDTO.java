@@ -33,8 +33,4 @@ public class InvoiceDTO implements Serializable {
     @NotNull
     private Double total;
 
-    @ApiModelProperty(position = 4, notes = "Non negative value, CreatedAt is required.")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDateTime createdAt;
-
 }

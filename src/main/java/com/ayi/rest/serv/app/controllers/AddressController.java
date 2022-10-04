@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @AllArgsConstructor
 @Api(value = "Address Api", tags = {"Address Service"})
@@ -24,7 +23,7 @@ public class AddressController {
 
     /**
      * Endpoint that returns a list of addresses
-     * @return List<AddressResponseDTO>
+     * @return PagesResponseDTO<AddressResponseDTO>
      */
     @GetMapping(value = "/all")
     @ApiOperation(
@@ -71,7 +70,7 @@ public class AddressController {
                     code = 204,
                     message = "Body content empty")
     })
-    public ResponseEntity<?> findOneAddress(
+    public ResponseEntity<AddressResponseDTO> findOneAddress(
             @ApiParam(name = "id", required = true, value = "Id", example = "1")
             @PathVariable("id") Long id) {
 
@@ -98,11 +97,14 @@ public class AddressController {
                     response = AddressResponseDTO.class),
             @ApiResponse(
                     code = 204,
-                    message = "Body content empty")
+                    message = "Body content empty"),
+            @ApiResponse(
+                    code = 400,
+                    message = "Incompatible information entered")
     })
     public ResponseEntity<AddressResponseDTO> createNewAddress(
             @ApiParam(name = "address", required = true, value = "Address")
-            @Valid @RequestBody AddressDTO address){
+            @Valid @RequestBody AddressDTO address) {
 
         AddressResponseDTO addressCreated = addressService.createAddress(address);
 
@@ -113,7 +115,7 @@ public class AddressController {
     /**
      * Endpoint that updates an address by its id and returns it
      * @param address Address to update
-     * @param id Address id
+     * @param id      Address id
      * @return AddressResponseDTO
      */
     @PutMapping(value = "/update/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -134,7 +136,7 @@ public class AddressController {
             @ApiParam(name = "address", required = true, value = "Address")
             @Valid @RequestBody AddressDTO address,
             @ApiParam(name = "id", required = true, value = "Id", example = "1")
-            @PathVariable("id") Long id){
+            @PathVariable("id") Long id) {
 
         AddressResponseDTO addressUpdated = addressService.updateAddress(address, id);
 
@@ -159,7 +161,7 @@ public class AddressController {
     })
     public ResponseEntity<Void> deleteOneAddress(
             @ApiParam(name = "id", required = true, value = "Id", example = "1")
-            @PathVariable("id") Long id){
+            @PathVariable("id") Long id) {
 
         addressService.deleteAddressById(id);
 

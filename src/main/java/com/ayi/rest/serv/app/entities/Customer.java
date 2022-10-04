@@ -2,6 +2,8 @@ package com.ayi.rest.serv.app.entities;
 
 import io.swagger.annotations.ApiModel;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,6 +14,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "customers")
+@SQLDelete(sql = "UPDATE customers SET deleted = true WHERE customer_id=?")
+@Where(clause = "deleted=false")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -54,6 +58,9 @@ public class Customer implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "address_id")
     )
     private List<Address> addressList = new ArrayList<>();
+
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted = false;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;

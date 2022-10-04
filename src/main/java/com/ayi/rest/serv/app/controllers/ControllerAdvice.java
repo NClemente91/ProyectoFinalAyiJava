@@ -3,7 +3,7 @@ package com.ayi.rest.serv.app.controllers;
 import com.ayi.rest.serv.app.dtos.response.ErrorResponseDTO;
 import com.ayi.rest.serv.app.exceptions.BadRequestException;
 import com.ayi.rest.serv.app.exceptions.NotFoundException;
-import jdk.swing.interop.SwingInterOpUtils;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,7 +19,8 @@ public class ControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = {
             BadRequestException.class,
-            MethodArgumentTypeMismatchException.class
+            MethodArgumentTypeMismatchException.class,
+            DataIntegrityViolationException.class
     })
     public ResponseEntity<ErrorResponseDTO> badRequestHandlerException(HttpServletRequest request, RuntimeException exception) {
         ErrorResponseDTO error = ErrorResponseDTO
