@@ -52,7 +52,7 @@ public class Customer implements Serializable {
     @OneToMany(mappedBy = "customer")
     private List<Invoice> invoiceList = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "tbl_customer_address",
             joinColumns = @JoinColumn(name = "customer_id"),
             inverseJoinColumns = @JoinColumn(name = "address_id")
@@ -67,5 +67,9 @@ public class Customer implements Serializable {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public void addAddress(Address address) {
+        addressList.add(address);
+    }
 
 }

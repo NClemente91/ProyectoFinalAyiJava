@@ -28,11 +28,4 @@ public class CustomerDetailResponseDTO implements Serializable {
     @ApiModelProperty(position = 2, notes = "Non negative value, Score is required.")
     private Integer score;
 
-    @ApiModelProperty(position = 3, notes = "Non negative value, CreatedAt is required.")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDateTime createdAt;
-
-    @ApiModelProperty(position = 4, notes = "Non negative value, UpdatedAt is required.")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDateTime updatedAt;
 }

@@ -36,7 +36,7 @@ public class Address implements Serializable {
     private String street;
 
     @Column(name = "street_number", nullable = false)
-    private Integer streetNumber;
+    private String streetNumber;
 
     @Column(name = "apartment", length = 25)
     private String apartment;

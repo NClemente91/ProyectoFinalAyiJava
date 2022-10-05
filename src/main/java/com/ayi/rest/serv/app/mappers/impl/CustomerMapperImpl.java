@@ -41,16 +41,19 @@ public class CustomerMapperImpl implements ICustomerMapper {
     }
 
     @Override
-    public FullCustomerResponseDTO entitiesToFullCustomerResponseDto(Customer customer, CustomerDetail customerDetail, Address address) {
+    public FullCustomerResponseDTO entityToFullResponseDto(Customer customer) {
 
         CustomerDetailResponseDTO customerDetailResponseDTO = new CustomerDetailResponseDTO();
-        AddressResponseDTO addressResponseDTO = new AddressResponseDTO();
-
-        modelMapper.map(customerDetail, customerDetailResponseDTO);
-        modelMapper.map(address, addressResponseDTO);
+        modelMapper.map(customer.getCustomerDetail(), customerDetailResponseDTO);
 
         List<AddressResponseDTO> addressResponseDTOList = new ArrayList<>();
-        addressResponseDTOList.add(addressResponseDTO);
+        AddressResponseDTO addressResponseDTO = new AddressResponseDTO();
+
+        for (int i = 0; i < customer.getAddressList().size(); i++) {
+            Address addressToMap = customer.getAddressList().get(i);
+            modelMapper.map(addressToMap,addressResponseDTO);
+            addressResponseDTOList.add(addressResponseDTO);
+        }
 
         return FullCustomerResponseDTO.builder()
                 .customerId(customer.getCustomerId())
@@ -63,7 +66,6 @@ public class CustomerMapperImpl implements ICustomerMapper {
                 .detail(customerDetailResponseDTO)
                 .addresses(addressResponseDTOList)
                 .build();
-
     }
 
 }

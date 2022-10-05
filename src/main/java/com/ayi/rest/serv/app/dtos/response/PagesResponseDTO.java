@@ -20,7 +20,7 @@ import java.util.List;
 public class PagesResponseDTO<EntityResponseDTO> {
 
     @ApiModelProperty(position = 1, notes = "Non negative value, The List of entities are required.")
-    private List<EntityResponseDTO> entityResponseDTOs = new ArrayList<>();
+    private List<EntityResponseDTO> entities = new ArrayList<>();
 
     @ApiModelProperty(position = 2, notes = "Total pages of the entity")
     private Integer totalPages;

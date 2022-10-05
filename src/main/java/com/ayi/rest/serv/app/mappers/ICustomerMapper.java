@@ -10,5 +10,6 @@ import com.ayi.rest.serv.app.entities.CustomerDetail;
 public interface ICustomerMapper {
     CustomerResponseDTO entityToResponseDto(Customer entity);
     Customer requestDtoToEntity(CustomerDTO requestDto);
-    FullCustomerResponseDTO entitiesToFullCustomerResponseDto(Customer customer, CustomerDetail customerDetail, Address address);
+    FullCustomerResponseDTO entityToFullResponseDto(Customer customer);
+
 }

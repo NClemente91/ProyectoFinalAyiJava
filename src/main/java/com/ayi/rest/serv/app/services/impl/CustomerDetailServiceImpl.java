@@ -52,7 +52,7 @@ public class CustomerDetailServiceImpl implements ICustomerDetailService {
         }
 
         for(CustomerDetail c:customerDetailPageList){
-            customerDetailPageResponseDTO.getEntityResponseDTOs().add(customerDetailMapper.entityToResponseDto(c));
+            customerDetailPageResponseDTO.getEntities().add(customerDetailMapper.entityToResponseDto(c));
         }
         customerDetailPageResponseDTO.setTotalPages(customerDetailPageList.getTotalPages());
         customerDetailPageResponseDTO.setCurrentPage(customerDetailPageList.getNumber() + 1);

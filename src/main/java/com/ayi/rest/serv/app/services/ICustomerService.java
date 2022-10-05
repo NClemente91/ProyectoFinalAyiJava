@@ -10,11 +10,9 @@ public interface ICustomerService {
 
     PagesResponseDTO<CustomerResponseDTO> findAllCustomers(Integer page, Integer size);
 
-    CustomerResponseDTO findCustomerById(Long id);
+    FullCustomerResponseDTO findCustomerById(Long id);
 
-    CustomerResponseDTO createCustomer(CustomerDTO customerDTO);
-
-    FullCustomerResponseDTO createFullCustomer(FullCustomerDTO fullCustomerDTO);
+    FullCustomerResponseDTO createCustomer(FullCustomerDTO fullCustomerDTO);
 
     CustomerResponseDTO updateCustomer(CustomerDTO customerDTO, Long id);
 

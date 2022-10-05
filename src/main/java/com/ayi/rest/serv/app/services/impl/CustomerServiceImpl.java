@@ -62,7 +62,7 @@ public class CustomerServiceImpl implements ICustomerService {
         }
 
         for(Customer c:customerPageList){
-            customerPageResponseDTO.getEntityResponseDTOs().add(customerMapper.entityToResponseDto(c));
+            customerPageResponseDTO.getEntities().add(customerMapper.entityToResponseDto(c));
         }
         customerPageResponseDTO.setTotalPages(customerPageList.getTotalPages());
         customerPageResponseDTO.setCurrentPage(customerPageList.getNumber() + 1);
@@ -78,45 +78,23 @@ public class CustomerServiceImpl implements ICustomerService {
      * @return CustomerResponseDTO
      */
     @Override
-    public CustomerResponseDTO findCustomerById(Long id){
+    public FullCustomerResponseDTO findCustomerById(Long id) {
+
+        if (id < 0) {
+            throw new BadRequestException("El id no puede ser un número negativo.");
+        }
+
+        FullCustomerResponseDTO fullCustomerResponseDTO;
 
         Optional<Customer> optionalCustomer = customerRepository.findById(id);
 
-        if (optionalCustomer.isEmpty()){
-            throw new NotFoundException("Record with id " + id +" does not exist");
+        if (optionalCustomer.isEmpty()) {
+            throw new IllegalStateException("El registro con el id " + id + " no existe.");
         }
 
-        return customerMapper.entityToResponseDto(optionalCustomer.get());
+        fullCustomerResponseDTO = customerMapper.entityToFullResponseDto(optionalCustomer.get());
 
-    }
-
-    /**
-     * Method that creates a customer passed by parameter
-     * @param customerDTO Customer to create
-     * @return CustomerResponseDTO
-     */
-    @Override
-    public CustomerResponseDTO createCustomer(CustomerDTO customerDTO){
-
-        CustomerResponseDTO customerResponseDTO;
-
-        if (ObjectUtils.isEmpty(customerDTO)) {
-            throw new BadRequestException("Empty data in the entered entity");
-        }
-
-        Customer customerByDni = customerRepository.findByDni(customerDTO.getDni());
-
-        if (customerByDni != null) {
-            throw new BadRequestException("Existing customer");
-        }
-
-        Customer customerToCreate = customerMapper.requestDtoToEntity(customerDTO);
-        customerToCreate.setCreatedAt(LocalDateTime.now());
-
-        customerResponseDTO = customerMapper.entityToResponseDto(customerRepository.save(customerToCreate));
-
-        return customerResponseDTO;
-
+        return fullCustomerResponseDTO;
     }
 
     /**
@@ -125,7 +103,7 @@ public class CustomerServiceImpl implements ICustomerService {
      * @return CustomerWithDetailResponseDTO
      */
     @Override
-    public FullCustomerResponseDTO createFullCustomer(FullCustomerDTO fullCustomerDTO){
+    public FullCustomerResponseDTO createCustomer(FullCustomerDTO fullCustomerDTO){
 
         if (ObjectUtils.isEmpty(fullCustomerDTO)) {
             throw new BadRequestException("Empty data in the entered entity");
@@ -149,7 +127,7 @@ public class CustomerServiceImpl implements ICustomerService {
 
         Customer customerCreated = customerRepository.save(customerToCreate);
 
-        return customerMapper.entitiesToFullCustomerResponseDto(customerCreated, customerDetail, address);
+        return customerMapper.entityToFullResponseDto(customerCreated);
 
     }
 

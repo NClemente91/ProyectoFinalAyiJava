@@ -62,55 +62,23 @@ public class CustomerController {
     @ApiOperation(
             value = "Returns a customer",
             httpMethod = "GET",
-            response = CustomerResponseDTO.class
+            response = FullCustomerResponseDTO.class
     )
     @ApiResponses(value = {
             @ApiResponse(code = 200,
                     message = "Body content with basic information about customer",
-                    response = CustomerResponseDTO.class),
+                    response = FullCustomerResponseDTO.class),
             @ApiResponse(
                     code = 204,
                     message = "Body content empty")
     })
-    public ResponseEntity<CustomerResponseDTO> findOneCustomer(
+    public ResponseEntity<FullCustomerResponseDTO> findOneCustomer(
             @ApiParam(name = "id", required = true, value = "Id", example = "1")
             @PathVariable("id") Long id) {
 
-        CustomerResponseDTO customer = customerService.findCustomerById(id);
+        FullCustomerResponseDTO customer = customerService.findCustomerById(id);
 
         return new ResponseEntity<>(customer, HttpStatus.OK);
-
-    }
-
-    /**
-     * Endpoint that creates a customer and returns it
-     * @param customer Customer to create
-     * @return CustomerResponseDTO
-     */
-    @PostMapping(value = "/add", produces = {MediaType.APPLICATION_JSON_VALUE})
-    @ApiOperation(
-            value = "Returns the created customer",
-            httpMethod = "POST",
-            response = CustomerResponseDTO.class
-    )
-    @ApiResponses(value = {
-            @ApiResponse(code = 201,
-                    message = "Body content with basic information about customer",
-                    response = CustomerResponseDTO.class),
-            @ApiResponse(
-                    code = 204,
-                    message = "Body content empty"),
-            @ApiResponse(
-                    code = 400,
-                    message = "Incompatible information entered")
-    })
-    public ResponseEntity<CustomerResponseDTO> createNewCustomer(
-            @ApiParam(name = "customer", required = true, value = "Customer")
-            @Valid @RequestBody CustomerDTO customer) {
-
-        CustomerResponseDTO customerCreated = customerService.createCustomer(customer);
-
-        return new ResponseEntity<>(customerCreated, HttpStatus.CREATED);
 
     }
 
@@ -119,7 +87,7 @@ public class CustomerController {
      * @param fullCustomerDTO Customer with detail to create
      * @return CustomerWithDetailResponseDTO
      */
-    @PostMapping(value = "/addFull", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(value = "/add", produces = {MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(
             value = "Returns the created customer",
             httpMethod = "POST",
@@ -136,11 +104,11 @@ public class CustomerController {
                     code = 400,
                     message = "Incompatible information entered")
     })
-    public ResponseEntity<FullCustomerResponseDTO> createNewFullCustomer(
+    public ResponseEntity<FullCustomerResponseDTO> createNewCustomer(
             @ApiParam(name = "customer", required = true, value = "Customer")
             @Valid @RequestBody FullCustomerDTO fullCustomerDTO) {
 
-        return new ResponseEntity<>(customerService.createFullCustomer(fullCustomerDTO), HttpStatus.CREATED);
+        return new ResponseEntity<>(customerService.createCustomer(fullCustomerDTO), HttpStatus.CREATED);
 
     }
 

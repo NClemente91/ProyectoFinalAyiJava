@@ -59,7 +59,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
         }
 
         for(Invoice c:invoicePageList){
-            invoicePageResponseDTO.getEntityResponseDTOs().add(invoiceMapper.entityToResponseDto(c));
+            invoicePageResponseDTO.getEntities().add(invoiceMapper.entityToResponseDto(c));
         }
         invoicePageResponseDTO.setTotalPages(invoicePageList.getTotalPages());
         invoicePageResponseDTO.setCurrentPage(invoicePageList.getNumber() + 1);

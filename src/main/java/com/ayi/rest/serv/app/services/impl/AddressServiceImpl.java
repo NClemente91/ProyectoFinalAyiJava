@@ -52,7 +52,7 @@ public class AddressServiceImpl implements IAddressService {
         }
 
         for(Address a:addressPageList){
-            addressPageResponseDTO.getEntityResponseDTOs().add(addressMapper.entityToResponseDto(a));
+            addressPageResponseDTO.getEntities().add(addressMapper.entityToResponseDto(a));
         }
         addressPageResponseDTO.setTotalPages(addressPageList.getTotalPages());
         addressPageResponseDTO.setCurrentPage(addressPageList.getNumber() + 1);
