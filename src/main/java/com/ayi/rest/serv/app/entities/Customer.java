@@ -52,7 +52,7 @@ public class Customer implements Serializable {
     @OneToMany(mappedBy = "customer")
     private List<Invoice> invoiceList = new ArrayList<>();
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(name = "tbl_customer_address",
             joinColumns = @JoinColumn(name = "customer_id"),
             inverseJoinColumns = @JoinColumn(name = "address_id")

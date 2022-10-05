@@ -1,4 +1,4 @@
-package com.ayi.rest.serv.app.mappers;
+package com.ayi.rest.serv.app.dtos.request.mappers;
 
 import com.ayi.rest.serv.app.dtos.request.AddressDTO;
 import com.ayi.rest.serv.app.dtos.response.AddressResponseDTO;

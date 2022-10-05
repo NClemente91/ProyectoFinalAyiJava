@@ -1,15 +1,20 @@
-package com.ayi.rest.serv.app.mappers.impl;
+package com.ayi.rest.serv.app.dtos.request.mappers.impl;
 
 import com.ayi.rest.serv.app.dtos.request.CustomerDTO;
+import com.ayi.rest.serv.app.dtos.request.mappers.ICustomerMapper;
+import com.ayi.rest.serv.app.dtos.response.AddressResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.CustomerDetailResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.CustomerResponseDTO;
-import com.ayi.rest.serv.app.dtos.response.CustomerWithDetailResponseDTO;
+import com.ayi.rest.serv.app.dtos.response.FullCustomerResponseDTO;
+import com.ayi.rest.serv.app.entities.Address;
 import com.ayi.rest.serv.app.entities.Customer;
 import com.ayi.rest.serv.app.entities.CustomerDetail;
-import com.ayi.rest.serv.app.mappers.ICustomerMapper;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @AllArgsConstructor
@@ -36,12 +41,18 @@ public class CustomerMapperImpl implements ICustomerMapper {
     }
 
     @Override
-    public CustomerWithDetailResponseDTO entitiesToCustomerWithResponseDto(Customer customer, CustomerDetail customerDetail) {
+    public FullCustomerResponseDTO entitiesToFullCustomerResponseDto(Customer customer, CustomerDetail customerDetail, Address address) {
 
         CustomerDetailResponseDTO customerDetailResponseDTO = new CustomerDetailResponseDTO();
-        modelMapper.map(customerDetail, customerDetailResponseDTO);
+        AddressResponseDTO addressResponseDTO = new AddressResponseDTO();
 
-        return CustomerWithDetailResponseDTO.builder()
+        modelMapper.map(customerDetail, customerDetailResponseDTO);
+        modelMapper.map(address, addressResponseDTO);
+
+        List<AddressResponseDTO> addressResponseDTOList = new ArrayList<>();
+        addressResponseDTOList.add(addressResponseDTO);
+
+        return FullCustomerResponseDTO.builder()
                 .customerId(customer.getCustomerId())
                 .name(customer.getName())
                 .lastName(customer.getLastName())
@@ -50,6 +61,7 @@ public class CustomerMapperImpl implements ICustomerMapper {
                 .createdAt(customer.getCreatedAt())
                 .updatedAt(customer.getUpdatedAt())
                 .detail(customerDetailResponseDTO)
+                .addresses(addressResponseDTOList)
                 .build();
 
     }

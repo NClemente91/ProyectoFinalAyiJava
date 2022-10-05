@@ -1,16 +1,18 @@
 package com.ayi.rest.serv.app.services.impl;
 
 import com.ayi.rest.serv.app.dtos.request.CustomerDTO;
-import com.ayi.rest.serv.app.dtos.request.CustomerWithDetailDTO;
+import com.ayi.rest.serv.app.dtos.request.FullCustomerDTO;
+import com.ayi.rest.serv.app.dtos.request.mappers.IAddressMapper;
 import com.ayi.rest.serv.app.dtos.response.CustomerResponseDTO;
-import com.ayi.rest.serv.app.dtos.response.CustomerWithDetailResponseDTO;
+import com.ayi.rest.serv.app.dtos.response.FullCustomerResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.PagesResponseDTO;
+import com.ayi.rest.serv.app.entities.Address;
 import com.ayi.rest.serv.app.entities.Customer;
 import com.ayi.rest.serv.app.entities.CustomerDetail;
 import com.ayi.rest.serv.app.exceptions.BadRequestException;
 import com.ayi.rest.serv.app.exceptions.NotFoundException;
-import com.ayi.rest.serv.app.mappers.ICustomerDetailMapper;
-import com.ayi.rest.serv.app.mappers.ICustomerMapper;
+import com.ayi.rest.serv.app.dtos.request.mappers.ICustomerDetailMapper;
+import com.ayi.rest.serv.app.dtos.request.mappers.ICustomerMapper;
 import com.ayi.rest.serv.app.repositories.ICustomerDetailRepository;
 import com.ayi.rest.serv.app.repositories.ICustomerRepository;
 import com.ayi.rest.serv.app.services.ICustomerDetailService;
@@ -35,18 +37,12 @@ public class CustomerServiceImpl implements ICustomerService {
 
     @Autowired
     private ICustomerRepository customerRepository;
-
-    @Autowired
-    private ICustomerDetailService customerDetailService;
-
-    @Autowired
-    private ICustomerDetailRepository customerDetailRepository;
-
     @Autowired
     private ICustomerMapper customerMapper;
-
     @Autowired
     private ICustomerDetailMapper customerDetailMapper;
+    @Autowired
+    private IAddressMapper addressMapper;
 
     /**
      * Method that returns a list of customers
@@ -127,32 +123,35 @@ public class CustomerServiceImpl implements ICustomerService {
 
     /**
      * Method that creates a customer with detail passed by parameter
-     * @param customerWithDetailDTO Customer to create
+     * @param fullCustomerDTO Customer to create
      * @return CustomerWithDetailResponseDTO
      */
     @Override
-    public CustomerWithDetailResponseDTO createCustomerWithDetail(CustomerWithDetailDTO customerWithDetailDTO){
+    public FullCustomerResponseDTO createFullCustomer(FullCustomerDTO fullCustomerDTO){
 
-        if (ObjectUtils.isEmpty(customerWithDetailDTO)) {
+        if (ObjectUtils.isEmpty(fullCustomerDTO)) {
             throw new BadRequestException("Empty data in the entered entity");
         }
 
-        Customer customerByDni = customerRepository.findByDni(customerWithDetailDTO.getCustomer().getDni());
+        Customer customerByDni = customerRepository.findByDni(fullCustomerDTO.getCustomer().getDni());
 
         if (customerByDni != null) {
             throw new BadRequestException("Existing customer");
         }
 
-        Customer customerToCreate = customerMapper.requestDtoToEntity(customerWithDetailDTO.getCustomer());
-        CustomerDetail customerDetail = customerDetailMapper.requestDtoToEntity(customerWithDetailDTO.getDetail());
+        Customer customerToCreate = customerMapper.requestDtoToEntity(fullCustomerDTO.getCustomer());
+        CustomerDetail customerDetail = customerDetailMapper.requestDtoToEntity(fullCustomerDTO.getDetail());
+        Address address = addressMapper.requestDtoToEntity(fullCustomerDTO.getAddress());
         customerDetail.setCreatedAt(LocalDateTime.now());
+        address.setCreatedAt(LocalDateTime.now());
 
         customerToCreate.setCustomerDetail(customerDetail);
+        customerToCreate.getAddressList().add(address);
         customerToCreate.setCreatedAt(LocalDateTime.now());
 
         Customer customerCreated = customerRepository.save(customerToCreate);
 
-        return customerMapper.entitiesToCustomerWithResponseDto(customerCreated, customerDetail);
+        return customerMapper.entitiesToFullCustomerResponseDto(customerCreated, customerDetail, address);
 
     }
 

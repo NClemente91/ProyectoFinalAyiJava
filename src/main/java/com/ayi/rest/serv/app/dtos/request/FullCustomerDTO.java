@@ -17,16 +17,21 @@ import javax.validation.constraints.NotNull;
         value = "CustomerWithDetailDTO",
         description = "Represents the data needed to create or update customers with details."
 )
-public class CustomerWithDetailDTO {
+public class FullCustomerDTO {
 
-    @ApiModelProperty(position = 1, notes = "Non negative value, CustomerDTO is required.")
+    @ApiModelProperty(position = 1, notes = "Non null value, CustomerDTO is required.")
     @NotNull
     @NotEmpty
     private CustomerDTO customer;
 
-    @ApiModelProperty(position = 2, notes = "Non negative value, CustomerDetailDTO is required.")
+    @ApiModelProperty(position = 2, notes = "Non null value, CustomerDetailDTO is required.")
     @NotNull
     @NotEmpty
     private CustomerDetailDTO detail;
+
+    @ApiModelProperty(position = 3, notes = "Non null value, AddressDTO is required.")
+    @NotNull
+    @NotEmpty
+    private AddressDTO address;
 
 }

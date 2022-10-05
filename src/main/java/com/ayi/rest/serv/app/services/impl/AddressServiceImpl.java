@@ -6,7 +6,7 @@ import com.ayi.rest.serv.app.dtos.response.PagesResponseDTO;
 import com.ayi.rest.serv.app.entities.Address;
 import com.ayi.rest.serv.app.exceptions.BadRequestException;
 import com.ayi.rest.serv.app.exceptions.NotFoundException;
-import com.ayi.rest.serv.app.mappers.IAddressMapper;
+import com.ayi.rest.serv.app.dtos.request.mappers.IAddressMapper;
 import com.ayi.rest.serv.app.repositories.IAddressRepository;
 import com.ayi.rest.serv.app.services.IAddressService;
 import lombok.AllArgsConstructor;
