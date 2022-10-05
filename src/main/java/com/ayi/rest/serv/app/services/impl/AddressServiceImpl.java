@@ -94,14 +94,17 @@ public class AddressServiceImpl implements IAddressService {
             throw new BadRequestException("Empty data in the entered entity");
         }
 
-        long repeatedAddress = addressRepository.repeatedAddressValidation(
+        Optional<Address> repeatedAddress = addressRepository.isAddressExist(
                 addressDTO.getStreet(),
                 addressDTO.getStreetNumber(),
                 addressDTO.getApartment(),
-                addressDTO.getCity()
+                addressDTO.getPostcode(),
+                addressDTO.getCity(),
+                addressDTO.getProvince(),
+                addressDTO.getCountry()
         );
 
-        if (repeatedAddress > 0) {
+        if (repeatedAddress.isPresent()) {
             throw new BadRequestException("Existing address");
         }
 
@@ -129,14 +132,17 @@ public class AddressServiceImpl implements IAddressService {
             throw new BadRequestException("Empty data in the entered entity");
         }
 
-        long repeatedAddress = addressRepository.repeatedAddressValidation(
+        Optional<Address> repeatedAddress = addressRepository.isAddressExist(
                 addressDTO.getStreet(),
                 addressDTO.getStreetNumber(),
                 addressDTO.getApartment(),
-                addressDTO.getCity()
+                addressDTO.getPostcode(),
+                addressDTO.getCity(),
+                addressDTO.getProvince(),
+                addressDTO.getCountry()
         );
 
-        if (repeatedAddress > 0) {
+        if (repeatedAddress.isPresent()) {
             throw new BadRequestException("Existing address");
         }
 

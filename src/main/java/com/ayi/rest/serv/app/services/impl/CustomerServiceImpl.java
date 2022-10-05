@@ -13,6 +13,7 @@ import com.ayi.rest.serv.app.exceptions.BadRequestException;
 import com.ayi.rest.serv.app.exceptions.NotFoundException;
 import com.ayi.rest.serv.app.mappers.ICustomerDetailMapper;
 import com.ayi.rest.serv.app.mappers.ICustomerMapper;
+import com.ayi.rest.serv.app.repositories.IAddressRepository;
 import com.ayi.rest.serv.app.repositories.ICustomerRepository;
 import com.ayi.rest.serv.app.services.ICustomerService;
 import lombok.AllArgsConstructor;
@@ -41,6 +42,8 @@ public class CustomerServiceImpl implements ICustomerService {
     private ICustomerDetailMapper customerDetailMapper;
     @Autowired
     private IAddressMapper addressMapper;
+    @Autowired
+    private IAddressRepository addressRepository;
 
     /**
      * Method that returns a list of customers
@@ -121,8 +124,23 @@ public class CustomerServiceImpl implements ICustomerService {
         customerDetail.setCreatedAt(LocalDateTime.now());
         address.setCreatedAt(LocalDateTime.now());
 
+        Optional<Address> repeatedAddress = addressRepository.isAddressExist(
+                address.getStreet(),
+                address.getStreetNumber(),
+                address.getApartment(),
+                address.getPostcode(),
+                address.getCity(),
+                address.getProvince(),
+                address.getCountry()
+        );
+
+        if (repeatedAddress.isPresent()) {
+            customerToCreate.addAddress(repeatedAddress.get());
+        } else {
+            customerToCreate.addAddress(address);
+        }
+
         customerToCreate.setCustomerDetail(customerDetail);
-        customerToCreate.getAddressList().add(address);
         customerToCreate.setCreatedAt(LocalDateTime.now());
 
         Customer customerCreated = customerRepository.save(customerToCreate);
