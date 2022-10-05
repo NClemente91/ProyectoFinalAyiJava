@@ -1,9 +1,9 @@
-package com.ayi.rest.serv.app.dtos.request.mappers.impl;
+package com.ayi.rest.serv.app.mappers.impl;
 
 import com.ayi.rest.serv.app.dtos.request.CustomerDetailDTO;
 import com.ayi.rest.serv.app.dtos.response.CustomerDetailResponseDTO;
 import com.ayi.rest.serv.app.entities.CustomerDetail;
-import com.ayi.rest.serv.app.dtos.request.mappers.ICustomerDetailMapper;
+import com.ayi.rest.serv.app.mappers.ICustomerDetailMapper;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;

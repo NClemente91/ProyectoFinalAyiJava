@@ -1,9 +1,9 @@
-package com.ayi.rest.serv.app.dtos.request.mappers.impl;
+package com.ayi.rest.serv.app.mappers.impl;
 
 import com.ayi.rest.serv.app.dtos.request.InvoiceDTO;
-import com.ayi.rest.serv.app.dtos.response.InvoiceResponseDTO;
+import com.ayi.rest.serv.app.dtos.response.*;
 import com.ayi.rest.serv.app.entities.Invoice;
-import com.ayi.rest.serv.app.dtos.request.mappers.IInvoiceMapper;
+import com.ayi.rest.serv.app.mappers.IInvoiceMapper;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -29,6 +29,25 @@ public class InvoiceMapperImpl implements IInvoiceMapper {
         Invoice invoiceEntity = new Invoice();
         modelMapper.map(requestDto, invoiceEntity);
         return invoiceEntity;
+
+    }
+
+    @Override
+    public FullInvoiceResponseDTO entitiesToFullInvoiceResponseDto(Invoice invoice) {
+
+        CustomerResponseDTO customerResponseDTO = new CustomerResponseDTO();
+
+        modelMapper.map(invoice.getCustomer(), customerResponseDTO);
+
+        return FullInvoiceResponseDTO.builder()
+                .invoiceId(invoice.getInvoiceId())
+                .invoiceType(invoice.getInvoiceType())
+                .description(invoice.getDescription())
+                .total(invoice.getTotal())
+                .createdAt(invoice.getCreatedAt())
+                .updatedAt(invoice.getUpdatedAt())
+                .customer(customerResponseDTO)
+                .build();
 
     }
 

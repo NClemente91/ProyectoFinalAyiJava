@@ -1,6 +1,8 @@
 package com.ayi.rest.serv.app.controllers;
 
+import com.ayi.rest.serv.app.dtos.request.FullInvoiceDTO;
 import com.ayi.rest.serv.app.dtos.request.InvoiceDTO;
+import com.ayi.rest.serv.app.dtos.response.FullInvoiceResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.InvoiceResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.PagesResponseDTO;
 import com.ayi.rest.serv.app.services.IInvoiceService;
@@ -82,7 +84,7 @@ public class InvoiceController {
 
     /**
      * Endpoint that creates an invoice and returns it
-     * @param invoice Invoice to create
+     * @param fullInvoiceDTO Invoice to create
      * @return InvoiceResponseDTO
      */
     @PostMapping(value = "/add", produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -102,13 +104,11 @@ public class InvoiceController {
                     code = 400,
                     message = "Incompatible information entered")
     })
-    public ResponseEntity<InvoiceResponseDTO> createNewInvoice(
+    public ResponseEntity<FullInvoiceResponseDTO> createNewInvoice(
             @ApiParam(name = "invoice", required = true, value = "Invoice")
-            @Valid @RequestBody InvoiceDTO invoice) {
+            @Valid @RequestBody FullInvoiceDTO fullInvoiceDTO) {
 
-        InvoiceResponseDTO addressCreated = invoiceService.createInvoice(invoice);
-
-        return new ResponseEntity<>(addressCreated, HttpStatus.CREATED);
+        return new ResponseEntity<>(invoiceService.createInvoice(fullInvoiceDTO), HttpStatus.CREATED);
 
     }
 
@@ -122,7 +122,7 @@ public class InvoiceController {
     @ApiOperation(
             value = "Returns the updated invoice",
             httpMethod = "PUT",
-            response = InvoiceResponseDTO.class
+            response = FullInvoiceResponseDTO.class
     )
     @ApiResponses(value = {
             @ApiResponse(code = 200,

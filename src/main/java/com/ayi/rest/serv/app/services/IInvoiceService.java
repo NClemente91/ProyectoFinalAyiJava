@@ -1,6 +1,8 @@
 package com.ayi.rest.serv.app.services;
 
+import com.ayi.rest.serv.app.dtos.request.FullInvoiceDTO;
 import com.ayi.rest.serv.app.dtos.request.InvoiceDTO;
+import com.ayi.rest.serv.app.dtos.response.FullInvoiceResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.InvoiceResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.PagesResponseDTO;
 
@@ -12,7 +14,7 @@ public interface IInvoiceService {
 
     InvoiceResponseDTO findInvoiceById(Long id);
 
-    InvoiceResponseDTO createInvoice(InvoiceDTO invoiceDTO);
+    FullInvoiceResponseDTO createInvoice(FullInvoiceDTO fullInvoiceDTO);
 
     InvoiceResponseDTO updateInvoice(InvoiceDTO invoiceDTO, Long id);
 

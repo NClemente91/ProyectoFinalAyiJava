@@ -6,7 +6,7 @@ import com.ayi.rest.serv.app.dtos.response.PagesResponseDTO;
 import com.ayi.rest.serv.app.entities.CustomerDetail;
 import com.ayi.rest.serv.app.exceptions.BadRequestException;
 import com.ayi.rest.serv.app.exceptions.NotFoundException;
-import com.ayi.rest.serv.app.dtos.request.mappers.ICustomerDetailMapper;
+import com.ayi.rest.serv.app.mappers.ICustomerDetailMapper;
 import com.ayi.rest.serv.app.repositories.ICustomerDetailRepository;
 import com.ayi.rest.serv.app.services.ICustomerDetailService;
 import lombok.AllArgsConstructor;

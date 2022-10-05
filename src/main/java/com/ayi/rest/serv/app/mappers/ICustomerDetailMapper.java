@@ -1,4 +1,4 @@
-package com.ayi.rest.serv.app.dtos.request.mappers;
+package com.ayi.rest.serv.app.mappers;
 
 import com.ayi.rest.serv.app.dtos.request.CustomerDetailDTO;
 import com.ayi.rest.serv.app.dtos.response.CustomerDetailResponseDTO;

@@ -1,7 +1,7 @@
-package com.ayi.rest.serv.app.dtos.request.mappers.impl;
+package com.ayi.rest.serv.app.mappers.impl;
 
 import com.ayi.rest.serv.app.dtos.request.CustomerDTO;
-import com.ayi.rest.serv.app.dtos.request.mappers.ICustomerMapper;
+import com.ayi.rest.serv.app.mappers.ICustomerMapper;
 import com.ayi.rest.serv.app.dtos.response.AddressResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.CustomerDetailResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.CustomerResponseDTO;
