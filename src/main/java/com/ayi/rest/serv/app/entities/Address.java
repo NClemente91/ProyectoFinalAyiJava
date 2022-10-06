@@ -53,7 +53,7 @@ public class Address implements Serializable {
     @Column(name = "country", nullable = false, length = 50)
     private String country;
 
-    @ManyToMany(mappedBy = "addressList")
+    @ManyToMany(mappedBy = "addressList", cascade = CascadeType.ALL)
     private List<Customer> customerList = new ArrayList<>();
 
     @Column(name = "deleted", nullable = false)

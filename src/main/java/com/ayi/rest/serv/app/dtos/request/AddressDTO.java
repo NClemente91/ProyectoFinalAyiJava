@@ -57,4 +57,8 @@ public class AddressDTO implements Serializable {
     @NotEmpty
     private String country;
 
+    @ApiModelProperty(position = 8, notes = "Non null value, Customer Dni is required.")
+    @NotNull
+    private String customerDni;
+
 }

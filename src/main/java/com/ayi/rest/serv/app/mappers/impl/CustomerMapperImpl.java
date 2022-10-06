@@ -37,11 +37,9 @@ public class CustomerMapperImpl implements ICustomerMapper {
         modelMapper.map(customer.getCustomerDetail(), customerDetailResponseDTO);
 
         List<AddressResponseDTO> addressResponseDTOList = new ArrayList<>();
-        AddressResponseDTO addressResponseDTO = new AddressResponseDTO();
 
         for(Address address:customer.getAddressList()){
-            modelMapper.map(address, addressResponseDTO);
-            addressResponseDTOList.add(addressResponseDTO);
+            addressResponseDTOList.add(modelMapper.map(address, AddressResponseDTO.class));
         }
 
         return CustomerResponseDTO.builder()

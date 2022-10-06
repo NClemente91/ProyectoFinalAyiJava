@@ -4,10 +4,12 @@ import com.ayi.rest.serv.app.dtos.request.AddressDTO;
 import com.ayi.rest.serv.app.dtos.response.AddressResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.PagesResponseDTO;
 import com.ayi.rest.serv.app.entities.Address;
+import com.ayi.rest.serv.app.entities.Customer;
 import com.ayi.rest.serv.app.exceptions.BadRequestException;
 import com.ayi.rest.serv.app.exceptions.NotFoundException;
 import com.ayi.rest.serv.app.mappers.IAddressMapper;
 import com.ayi.rest.serv.app.repositories.IAddressRepository;
+import com.ayi.rest.serv.app.repositories.ICustomerRepository;
 import com.ayi.rest.serv.app.services.IAddressService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,9 @@ public class AddressServiceImpl implements IAddressService {
 
     @Autowired
     private IAddressRepository addressRepository;
+
+    @Autowired
+    private ICustomerRepository customerRepository;
 
     @Autowired
     private IAddressMapper addressMapper;
@@ -88,10 +93,16 @@ public class AddressServiceImpl implements IAddressService {
     @Override
     public AddressResponseDTO createAddress(AddressDTO addressDTO){
 
-        AddressResponseDTO addressResponseDTO;
+        Address createdAddress;
 
         if (ObjectUtils.isEmpty(addressDTO)) {
             throw new BadRequestException("Empty data in the entered entity");
+        }
+
+        Customer customerByDni = customerRepository.findByDni(addressDTO.getCustomerDni());
+
+        if (customerByDni == null) {
+            throw new BadRequestException("Cannot create an address without an associated customer");
         }
 
         Optional<Address> repeatedAddress = addressRepository.isAddressExist(
@@ -104,16 +115,19 @@ public class AddressServiceImpl implements IAddressService {
                 addressDTO.getCountry()
         );
 
-        if (repeatedAddress.isPresent()) {
-            throw new BadRequestException("Existing address");
+        if(repeatedAddress.isPresent()) {
+            repeatedAddress.get().getCustomerList().add(customerByDni);
+            customerByDni.getAddressList().add(repeatedAddress.get());
+            createdAddress = addressRepository.save(repeatedAddress.get());
+        } else {
+            Address addressToCreate = addressMapper.requestDtoToEntity(addressDTO);
+            addressToCreate.getCustomerList().add(customerByDni);
+            addressToCreate.setCreatedAt(LocalDateTime.now());
+            customerByDni.getAddressList().add(addressToCreate);
+            createdAddress = addressRepository.save(addressToCreate);
         }
 
-        Address addressToCreate = addressMapper.requestDtoToEntity(addressDTO);
-        addressToCreate.setCreatedAt(LocalDateTime.now());
-
-        addressResponseDTO = addressMapper.entityToResponseDto(addressRepository.save(addressToCreate));
-
-        return addressResponseDTO;
+        return addressMapper.entityToResponseDto(createdAddress);
 
     }
 
