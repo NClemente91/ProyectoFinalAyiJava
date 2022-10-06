@@ -1,9 +1,7 @@
 package com.ayi.rest.serv.app.controllers;
 
 import com.ayi.rest.serv.app.dtos.request.CustomerDTO;
-import com.ayi.rest.serv.app.dtos.request.FullCustomerDTO;
 import com.ayi.rest.serv.app.dtos.response.CustomerResponseDTO;
-import com.ayi.rest.serv.app.dtos.response.FullCustomerResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.PagesResponseDTO;
 import com.ayi.rest.serv.app.services.ICustomerService;
 import io.swagger.annotations.*;
@@ -62,21 +60,21 @@ public class CustomerController {
     @ApiOperation(
             value = "Returns a customer",
             httpMethod = "GET",
-            response = FullCustomerResponseDTO.class
+            response = CustomerResponseDTO.class
     )
     @ApiResponses(value = {
             @ApiResponse(code = 200,
                     message = "Body content with basic information about customer",
-                    response = FullCustomerResponseDTO.class),
+                    response = CustomerResponseDTO.class),
             @ApiResponse(
                     code = 204,
                     message = "Body content empty")
     })
-    public ResponseEntity<FullCustomerResponseDTO> findOneCustomer(
+    public ResponseEntity<CustomerResponseDTO> findOneCustomer(
             @ApiParam(name = "id", required = true, value = "Id", example = "1")
             @PathVariable("id") Long id) {
 
-        FullCustomerResponseDTO customer = customerService.findCustomerById(id);
+        CustomerResponseDTO customer = customerService.findCustomerById(id);
 
         return new ResponseEntity<>(customer, HttpStatus.OK);
 
@@ -84,19 +82,19 @@ public class CustomerController {
 
     /**
      * Endpoint that creates a customer with and returns it
-     * @param fullCustomerDTO Customer with detail to create
+     * @param customerDTO Customer with detail to create
      * @return CustomerWithDetailResponseDTO
      */
     @PostMapping(value = "/add", produces = {MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(
             value = "Returns the created customer",
             httpMethod = "POST",
-            response = FullCustomerResponseDTO.class
+            response = CustomerResponseDTO.class
     )
     @ApiResponses(value = {
             @ApiResponse(code = 201,
                     message = "Body content with basic information about customer",
-                    response = FullCustomerResponseDTO.class),
+                    response = CustomerResponseDTO.class),
             @ApiResponse(
                     code = 204,
                     message = "Body content empty"),
@@ -104,11 +102,11 @@ public class CustomerController {
                     code = 400,
                     message = "Incompatible information entered")
     })
-    public ResponseEntity<FullCustomerResponseDTO> createNewCustomer(
+    public ResponseEntity<CustomerResponseDTO> createNewCustomer(
             @ApiParam(name = "customer", required = true, value = "Customer")
-            @Valid @RequestBody FullCustomerDTO fullCustomerDTO) {
+            @Valid @RequestBody CustomerDTO customerDTO) {
 
-        return new ResponseEntity<>(customerService.createCustomer(fullCustomerDTO), HttpStatus.CREATED);
+        return new ResponseEntity<>(customerService.createCustomer(customerDTO), HttpStatus.CREATED);
 
     }
 

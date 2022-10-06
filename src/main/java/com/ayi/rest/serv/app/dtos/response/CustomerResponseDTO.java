@@ -8,6 +8,7 @@ import lombok.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -43,5 +44,11 @@ public class CustomerResponseDTO implements Serializable {
     @ApiModelProperty(position = 6, notes = "Non negative value, UpdatedAt is not required.")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDateTime updatedAt;
+
+    @ApiModelProperty(position = 7, notes = "Non null value, CustomerDetailResponseDTO is required.")
+    private CustomerDetailResponseDTO detail;
+
+    @ApiModelProperty(position = 8, notes = "Non null value, AddressResponseDTO is required.")
+    private List<AddressResponseDTO> addresses;
 
 }

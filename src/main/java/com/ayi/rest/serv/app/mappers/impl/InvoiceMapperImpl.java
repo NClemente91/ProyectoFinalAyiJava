@@ -31,9 +31,9 @@ public class InvoiceMapperImpl implements IInvoiceMapper {
     @Override
     public InvoiceResponseDTO entityToResponseDto(Invoice invoice) {
 
-        FullCustomerResponseDTO fullCustomerResponseDTO;
+        CustomerResponseDTO fullCustomerResponseDTO;
 
-        fullCustomerResponseDTO = customerMapper.entityToFullResponseDto(invoice.getCustomer());
+        fullCustomerResponseDTO = customerMapper.entityToResponseDto(invoice.getCustomer());
 
         return InvoiceResponseDTO.builder()
                 .invoiceId(invoice.getInvoiceId())
