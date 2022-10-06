@@ -62,21 +62,21 @@ public class InvoiceController {
     @ApiOperation(
             value = "Returns a invoice",
             httpMethod = "GET",
-            response = InvoiceResponseDTO.class
+            response = FullInvoiceResponseDTO.class
     )
     @ApiResponses(value = {
             @ApiResponse(code = 200,
                     message = "Body content with basic information about invoice",
-                    response = InvoiceResponseDTO.class),
+                    response = FullInvoiceResponseDTO.class),
             @ApiResponse(
                     code = 204,
                     message = "Body content empty")
     })
-    public ResponseEntity<InvoiceResponseDTO> findOneInvoice(
+    public ResponseEntity<FullInvoiceResponseDTO> findOneInvoice(
             @ApiParam(name = "id", required = true, value = "Id", example = "1")
             @PathVariable("id") Long id) {
 
-        InvoiceResponseDTO invoice = invoiceService.findInvoiceById(id);
+        FullInvoiceResponseDTO invoice = invoiceService.findInvoiceById(id);
 
         return new ResponseEntity<>(invoice, HttpStatus.OK);
 

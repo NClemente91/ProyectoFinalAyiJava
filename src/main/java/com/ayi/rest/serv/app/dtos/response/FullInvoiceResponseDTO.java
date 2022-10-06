@@ -40,6 +40,6 @@ public class FullInvoiceResponseDTO implements Serializable {
     private LocalDateTime updatedAt;
 
     @ApiModelProperty(position = 6, notes = "Non null value, Total is required.")
-    private CustomerResponseDTO customer;
+    private FullCustomerResponseDTO customer;
 
 }

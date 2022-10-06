@@ -9,5 +9,5 @@ import com.ayi.rest.serv.app.entities.Invoice;
 public interface IInvoiceMapper {
     InvoiceResponseDTO entityToResponseDto(Invoice entity);
     Invoice requestDtoToEntity(InvoiceDTO requestDto);
-    FullInvoiceResponseDTO entitiesToFullInvoiceResponseDto(Invoice invoice);
+    FullInvoiceResponseDTO entityToFullResponseDto(Invoice invoice);
 }

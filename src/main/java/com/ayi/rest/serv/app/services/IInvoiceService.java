@@ -12,7 +12,7 @@ public interface IInvoiceService {
 
     PagesResponseDTO<InvoiceResponseDTO> findAllInvoices(Integer page, Integer size);
 
-    InvoiceResponseDTO findInvoiceById(Long id);
+    FullInvoiceResponseDTO findInvoiceById(Long id);
 
     FullInvoiceResponseDTO createInvoice(FullInvoiceDTO fullInvoiceDTO);
 

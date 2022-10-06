@@ -3,9 +3,11 @@ package com.ayi.rest.serv.app.mappers.impl;
 import com.ayi.rest.serv.app.dtos.request.InvoiceDTO;
 import com.ayi.rest.serv.app.dtos.response.*;
 import com.ayi.rest.serv.app.entities.Invoice;
+import com.ayi.rest.serv.app.mappers.ICustomerMapper;
 import com.ayi.rest.serv.app.mappers.IInvoiceMapper;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,6 +15,9 @@ import org.springframework.stereotype.Component;
 public class InvoiceMapperImpl implements IInvoiceMapper {
 
     private final ModelMapper modelMapper;
+
+    @Autowired
+    private ICustomerMapper customerMapper;
 
     @Override
     public InvoiceResponseDTO entityToResponseDto(Invoice entity) {
@@ -33,11 +38,11 @@ public class InvoiceMapperImpl implements IInvoiceMapper {
     }
 
     @Override
-    public FullInvoiceResponseDTO entitiesToFullInvoiceResponseDto(Invoice invoice) {
+    public FullInvoiceResponseDTO entityToFullResponseDto(Invoice invoice) {
 
-        CustomerResponseDTO customerResponseDTO = new CustomerResponseDTO();
+        FullCustomerResponseDTO fullCustomerResponseDTO;
 
-        modelMapper.map(invoice.getCustomer(), customerResponseDTO);
+        fullCustomerResponseDTO = customerMapper.entityToFullResponseDto(invoice.getCustomer());
 
         return FullInvoiceResponseDTO.builder()
                 .invoiceId(invoice.getInvoiceId())
@@ -46,7 +51,7 @@ public class InvoiceMapperImpl implements IInvoiceMapper {
                 .total(invoice.getTotal())
                 .createdAt(invoice.getCreatedAt())
                 .updatedAt(invoice.getUpdatedAt())
-                .customer(customerResponseDTO)
+                .customer(fullCustomerResponseDTO)
                 .build();
 
     }

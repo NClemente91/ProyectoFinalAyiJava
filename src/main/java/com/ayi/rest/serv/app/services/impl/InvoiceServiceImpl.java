@@ -75,7 +75,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
      * @return InvoiceResponseDTO
      */
     @Override
-    public InvoiceResponseDTO findInvoiceById(Long id){
+    public FullInvoiceResponseDTO findInvoiceById(Long id){
 
         Optional<Invoice> optionalInvoice = invoiceRepository.findById(id);
 
@@ -83,7 +83,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
             throw new NotFoundException("Record with id " + id +" does not exist");
         }
 
-        return invoiceMapper.entityToResponseDto(optionalInvoice.get());
+        return invoiceMapper.entityToFullResponseDto(optionalInvoice.get());
 
     }
 
@@ -94,8 +94,6 @@ public class InvoiceServiceImpl implements IInvoiceService {
      */
     @Override
     public FullInvoiceResponseDTO createInvoice(FullInvoiceDTO fullInvoiceDTO){
-
-        FullInvoiceResponseDTO fullInvoiceResponseDTO;
 
         if (ObjectUtils.isEmpty(fullInvoiceDTO)) {
             throw new BadRequestException("Empty data in the entered entity");
@@ -117,7 +115,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 
         Invoice invoiceCreated = invoiceRepository.save(invoiceToCreate);
 
-        return invoiceMapper.entitiesToFullInvoiceResponseDto(invoiceCreated);
+        return invoiceMapper.entityToFullResponseDto(invoiceCreated);
 
     }
 
