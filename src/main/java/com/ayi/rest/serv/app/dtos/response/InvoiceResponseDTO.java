@@ -39,4 +39,7 @@ public class InvoiceResponseDTO implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDateTime updatedAt;
 
+    @ApiModelProperty(position = 6, notes = "Non null value, Total is required.")
+    private FullCustomerResponseDTO customer;
+
 }

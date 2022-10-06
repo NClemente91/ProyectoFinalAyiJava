@@ -33,4 +33,8 @@ public class InvoiceDTO implements Serializable {
     @NotNull
     private Double total;
 
+    @ApiModelProperty(position = 4, notes = "Non null value, Customer Dni is required.")
+    @NotNull
+    private String customerDni;
+
 }

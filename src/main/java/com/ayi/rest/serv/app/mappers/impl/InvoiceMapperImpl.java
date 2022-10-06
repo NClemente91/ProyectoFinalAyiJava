@@ -20,15 +20,6 @@ public class InvoiceMapperImpl implements IInvoiceMapper {
     private ICustomerMapper customerMapper;
 
     @Override
-    public InvoiceResponseDTO entityToResponseDto(Invoice entity) {
-
-        InvoiceResponseDTO invoiceResponseDTO = new InvoiceResponseDTO();
-        modelMapper.map(entity, invoiceResponseDTO);
-        return invoiceResponseDTO;
-
-    }
-
-    @Override
     public Invoice requestDtoToEntity(InvoiceDTO requestDto) {
 
         Invoice invoiceEntity = new Invoice();
@@ -38,13 +29,13 @@ public class InvoiceMapperImpl implements IInvoiceMapper {
     }
 
     @Override
-    public FullInvoiceResponseDTO entityToFullResponseDto(Invoice invoice) {
+    public InvoiceResponseDTO entityToResponseDto(Invoice invoice) {
 
         FullCustomerResponseDTO fullCustomerResponseDTO;
 
         fullCustomerResponseDTO = customerMapper.entityToFullResponseDto(invoice.getCustomer());
 
-        return FullInvoiceResponseDTO.builder()
+        return InvoiceResponseDTO.builder()
                 .invoiceId(invoice.getInvoiceId())
                 .invoiceType(invoice.getInvoiceType())
                 .description(invoice.getDescription())

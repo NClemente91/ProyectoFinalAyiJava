@@ -1,8 +1,6 @@
 package com.ayi.rest.serv.app.services.impl;
 
-import com.ayi.rest.serv.app.dtos.request.FullInvoiceDTO;
 import com.ayi.rest.serv.app.dtos.request.InvoiceDTO;
-import com.ayi.rest.serv.app.dtos.response.FullInvoiceResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.InvoiceResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.PagesResponseDTO;
 import com.ayi.rest.serv.app.entities.Customer;
@@ -75,7 +73,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
      * @return InvoiceResponseDTO
      */
     @Override
-    public FullInvoiceResponseDTO findInvoiceById(Long id){
+    public InvoiceResponseDTO findInvoiceById(Long id){
 
         Optional<Invoice> optionalInvoice = invoiceRepository.findById(id);
 
@@ -83,39 +81,39 @@ public class InvoiceServiceImpl implements IInvoiceService {
             throw new NotFoundException("Record with id " + id +" does not exist");
         }
 
-        return invoiceMapper.entityToFullResponseDto(optionalInvoice.get());
+        return invoiceMapper.entityToResponseDto(optionalInvoice.get());
 
     }
 
     /**
      * Method that creates an invoice passed by parameter
-     * @param fullInvoiceDTO Invoice to create
+     * @param invoiceDTO Invoice to create
      * @return InvoiceResponseDTO
      */
     @Override
-    public FullInvoiceResponseDTO createInvoice(FullInvoiceDTO fullInvoiceDTO){
+    public InvoiceResponseDTO createInvoice(InvoiceDTO invoiceDTO){
 
-        if (ObjectUtils.isEmpty(fullInvoiceDTO)) {
+        if (ObjectUtils.isEmpty(invoiceDTO)) {
             throw new BadRequestException("Empty data in the entered entity");
         }
 
-        if (fullInvoiceDTO.getInvoice().getTotal() <= 0) {
+        if (invoiceDTO.getTotal() <= 0) {
             throw new BadRequestException("The invoice total must be greater than zero");
         }
 
-        Customer customerByDni = customerRepository.findByDni(fullInvoiceDTO.getCustomerDni());
+        Customer customerByDni = customerRepository.findByDni(invoiceDTO.getCustomerDni());
 
         if (customerByDni == null) {
             throw new BadRequestException("Customer does not exist");
         }
 
-        Invoice invoiceToCreate = invoiceMapper.requestDtoToEntity(fullInvoiceDTO.getInvoice());
+        Invoice invoiceToCreate = invoiceMapper.requestDtoToEntity(invoiceDTO);
         invoiceToCreate.setCreatedAt(LocalDateTime.now());
         invoiceToCreate.setCustomer(customerByDni);
 
         Invoice invoiceCreated = invoiceRepository.save(invoiceToCreate);
 
-        return invoiceMapper.entityToFullResponseDto(invoiceCreated);
+        return invoiceMapper.entityToResponseDto(invoiceCreated);
 
     }
 
