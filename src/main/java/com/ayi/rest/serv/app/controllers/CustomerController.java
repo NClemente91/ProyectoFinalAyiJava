@@ -3,6 +3,7 @@ package com.ayi.rest.serv.app.controllers;
 import com.ayi.rest.serv.app.dtos.request.CustomerDTO;
 import com.ayi.rest.serv.app.dtos.request.CustomerUpdateDTO;
 import com.ayi.rest.serv.app.dtos.response.CustomerResponseDTO;
+import com.ayi.rest.serv.app.dtos.response.InvoiceResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.PagesResponseDTO;
 import com.ayi.rest.serv.app.services.ICustomerService;
 import io.swagger.annotations.*;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @AllArgsConstructor
 @Api(value = "Customer Api", tags = {"Customer Service"})
@@ -49,6 +51,35 @@ public class CustomerController {
         PagesResponseDTO<CustomerResponseDTO> customerList = customerService.findAllCustomers(page, size);
 
         return new ResponseEntity<>(customerList, HttpStatus.OK);
+
+    }
+
+    /**
+     * Endpoint that returns all customer invoices
+     * @param id Customer id
+     * @return List<InvoiceResponseDTO>
+     */
+    @GetMapping(value = "/invoices/{id}")
+    @ApiOperation(
+            value = "Retrieves all customer invoices",
+            httpMethod = "GET",
+            response = InvoiceResponseDTO[].class
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "Body content with basic information about customer",
+                    response = InvoiceResponseDTO[].class),
+            @ApiResponse(
+                    code = 204,
+                    message = "Body content empty")
+    })
+    public ResponseEntity<List<InvoiceResponseDTO>> findCustomerInvoicesById(
+            @ApiParam(name = "id", required = true, value = "Id", example = "1")
+            @PathVariable("id") Long id) {
+
+        List<InvoiceResponseDTO> customerInvoices = customerService.findAllInvoicesById(id);
+
+        return new ResponseEntity<>(customerInvoices, HttpStatus.OK);
 
     }
 

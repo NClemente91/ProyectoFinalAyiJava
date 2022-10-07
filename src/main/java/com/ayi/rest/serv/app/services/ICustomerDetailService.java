@@ -10,9 +10,5 @@ public interface ICustomerDetailService {
 
     CustomerDetailResponseDTO findCustomerDetailById(Long id);
 
-    CustomerDetailResponseDTO createCustomerDetail(CustomerDetailDTO customerDetailDTO);
-
     CustomerDetailResponseDTO updateCustomerDetail(CustomerDetailDTO customerDetailDTO, Long id);
-
-    void deleteCustomerDetailById(Long id);
 }

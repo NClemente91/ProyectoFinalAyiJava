@@ -2,6 +2,8 @@ package com.ayi.rest.serv.app.services.impl;
 
 import com.ayi.rest.serv.app.dtos.request.CustomerDTO;
 import com.ayi.rest.serv.app.dtos.request.CustomerUpdateDTO;
+import com.ayi.rest.serv.app.dtos.response.InvoiceResponseDTO;
+import com.ayi.rest.serv.app.entities.Invoice;
 import com.ayi.rest.serv.app.mappers.IAddressMapper;
 import com.ayi.rest.serv.app.dtos.response.CustomerResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.PagesResponseDTO;
@@ -12,6 +14,7 @@ import com.ayi.rest.serv.app.exceptions.BadRequestException;
 import com.ayi.rest.serv.app.exceptions.NotFoundException;
 import com.ayi.rest.serv.app.mappers.ICustomerDetailMapper;
 import com.ayi.rest.serv.app.mappers.ICustomerMapper;
+import com.ayi.rest.serv.app.mappers.IInvoiceMapper;
 import com.ayi.rest.serv.app.repositories.ICustomerRepository;
 import com.ayi.rest.serv.app.services.ICustomerService;
 import lombok.AllArgsConstructor;
@@ -24,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -40,6 +45,9 @@ public class CustomerServiceImpl implements ICustomerService {
     private ICustomerDetailMapper customerDetailMapper;
     @Autowired
     private IAddressMapper addressMapper;
+
+    @Autowired
+    private IInvoiceMapper invoiceMapper;
 
     /**
      * Method that returns a list of customers
@@ -70,6 +78,34 @@ public class CustomerServiceImpl implements ICustomerService {
         customerPageResponseDTO.setTotalElements((int) customerPageList.getTotalElements());
 
         return customerPageResponseDTO;
+    }
+
+    /**
+     * Method that returns a customer by its id
+     * @param id Customer id
+     * @return CustomerResponseDTO
+     */
+    @Override
+    public List<InvoiceResponseDTO> findAllInvoicesById(Long id) {
+
+        List<InvoiceResponseDTO> invoicesList = new ArrayList<>();
+
+        if (id < 0) {
+            throw new BadRequestException("Id cannot be negative");
+        }
+
+        Optional<Customer> optionalCustomer = customerRepository.findById(id);
+
+        if (optionalCustomer.isEmpty()) {
+            throw new IllegalStateException("Record with id " + id + " does not exist");
+        }
+
+        for(Invoice i:optionalCustomer.get().getInvoiceList()){
+            invoicesList.add(invoiceMapper.entityToResponseDto(i));
+        }
+
+        return invoicesList;
+
     }
 
     /**

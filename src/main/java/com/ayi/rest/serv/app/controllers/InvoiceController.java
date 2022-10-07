@@ -1,6 +1,7 @@
 package com.ayi.rest.serv.app.controllers;
 
 import com.ayi.rest.serv.app.dtos.request.InvoiceDTO;
+import com.ayi.rest.serv.app.dtos.request.InvoiceUpdateDTO;
 import com.ayi.rest.serv.app.dtos.response.InvoiceResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.PagesResponseDTO;
 import com.ayi.rest.serv.app.services.IInvoiceService;
@@ -132,7 +133,7 @@ public class InvoiceController {
     })
     public ResponseEntity<InvoiceResponseDTO> updateOneInvoice(
             @ApiParam(name = "invoice", required = true, value = "Invoice")
-            @Valid @RequestBody InvoiceDTO invoice,
+            @Valid @RequestBody InvoiceUpdateDTO invoice,
             @ApiParam(name = "id", required = true, value = "Id", example = "1")
             @PathVariable("id") Long id) {
 

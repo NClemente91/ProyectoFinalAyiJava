@@ -1,6 +1,7 @@
 package com.ayi.rest.serv.app.services.impl;
 
 import com.ayi.rest.serv.app.dtos.request.InvoiceDTO;
+import com.ayi.rest.serv.app.dtos.request.InvoiceUpdateDTO;
 import com.ayi.rest.serv.app.dtos.response.InvoiceResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.PagesResponseDTO;
 import com.ayi.rest.serv.app.entities.Customer;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -75,6 +77,10 @@ public class InvoiceServiceImpl implements IInvoiceService {
     @Override
     public InvoiceResponseDTO findInvoiceById(Long id){
 
+        if (id < 0) {
+            throw new BadRequestException("Id cannot be negative");
+        }
+
         Optional<Invoice> optionalInvoice = invoiceRepository.findById(id);
 
         if (optionalInvoice.isEmpty()){
@@ -124,13 +130,25 @@ public class InvoiceServiceImpl implements IInvoiceService {
      * @return InvoiceResponseDTO
      */
     @Override
-    public InvoiceResponseDTO updateInvoice(InvoiceDTO invoiceDTO, Long id){
-
-        InvoiceResponseDTO invoiceResponseDTO;
+    public InvoiceResponseDTO updateInvoice(InvoiceUpdateDTO invoiceDTO, Long id){
 
         if (ObjectUtils.isEmpty(invoiceDTO)) {
             throw new BadRequestException("Empty data in the entered entity");
         }
+
+        if (id < 0) {
+            throw new BadRequestException("Id cannot be negative");
+        }
+
+        if (invoiceDTO.getTotal() <= 0) {
+            throw new BadRequestException("The invoice total must be greater than zero");
+        }
+
+        if (Objects.equals(invoiceDTO.getDescription(), "")) {
+            throw new BadRequestException("Description can not be empty");
+        }
+
+        //Agregar verificación tipos de factura
 
         Optional<Invoice> optionalInvoice = invoiceRepository.findById(id);
 
@@ -138,22 +156,15 @@ public class InvoiceServiceImpl implements IInvoiceService {
             throw new NotFoundException("Invoice to update not found");
         }
 
-//        Invoice invoiceByDni = invoiceRepository.findByDni(invoiceDTO.getDni());
-//
-//        if(!Objects.equals(invoiceDTO.getDni(), optionalInvoice.get().getDni()) && invoiceByDni != null){
-//            throw new BadRequestException("Invoice with DNI entered already exists");
-//        }
-
         Invoice invoiceToUpdate = invoiceMapper.requestDtoToEntity(invoiceDTO);
         invoiceToUpdate.setInvoiceId(optionalInvoice.get().getInvoiceId());
+        invoiceToUpdate.setCustomer(optionalInvoice.get().getCustomer());
         invoiceToUpdate.setCreatedAt(optionalInvoice.get().getCreatedAt());
         invoiceToUpdate.setUpdatedAt(LocalDateTime.now());
 
         Invoice invoiceUpdated = invoiceRepository.save(invoiceToUpdate);
 
-        invoiceResponseDTO = invoiceMapper.entityToResponseDto(invoiceUpdated);
-
-        return invoiceResponseDTO;
+        return invoiceMapper.entityToResponseDto(invoiceUpdated);
 
     }
 
@@ -163,6 +174,10 @@ public class InvoiceServiceImpl implements IInvoiceService {
      */
     @Override
     public void deleteInvoiceById(Long id){
+
+        if (id < 0) {
+            throw new BadRequestException("Id cannot be negative");
+        }
 
         Optional<Invoice> optionalInvoice = invoiceRepository.findById(id);
 

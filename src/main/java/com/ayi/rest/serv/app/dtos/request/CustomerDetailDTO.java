@@ -1,13 +1,11 @@
 package com.ayi.rest.serv.app.dtos.request;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,11 +19,11 @@ import java.time.LocalDateTime;
 )
 public class CustomerDetailDTO implements Serializable {
 
-    @ApiModelProperty(position = 1, notes = "Non negative value, IsPrime is required.")
+    @ApiModelProperty(position = 1, notes = "Non null value, IsPrime is required.")
     @NotNull
     private Boolean isPrime;
 
-    @ApiModelProperty(position = 2, notes = "Non negative value, Score is required.")
+    @ApiModelProperty(position = 2, notes = "Non null value, Score is required.")
     @NotNull
     private Integer score;
 

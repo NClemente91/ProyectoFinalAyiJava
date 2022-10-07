@@ -1,6 +1,7 @@
 package com.ayi.rest.serv.app.mappers.impl;
 
 import com.ayi.rest.serv.app.dtos.request.InvoiceDTO;
+import com.ayi.rest.serv.app.dtos.request.InvoiceUpdateDTO;
 import com.ayi.rest.serv.app.dtos.response.*;
 import com.ayi.rest.serv.app.entities.Invoice;
 import com.ayi.rest.serv.app.mappers.ICustomerMapper;
@@ -21,6 +22,13 @@ public class InvoiceMapperImpl implements IInvoiceMapper {
 
     @Override
     public Invoice requestDtoToEntity(InvoiceDTO requestDto) {
+
+        return modelMapper.map(requestDto, Invoice.class);
+
+    }
+
+    @Override
+    public Invoice requestDtoToEntity(InvoiceUpdateDTO requestDto) {
 
         return modelMapper.map(requestDto, Invoice.class);
 

@@ -70,6 +70,10 @@ public class CustomerDetailServiceImpl implements ICustomerDetailService {
     @Override
     public CustomerDetailResponseDTO findCustomerDetailById(Long id){
 
+        if (id < 0) {
+            throw new BadRequestException("Id cannot be negative");
+        }
+
         Optional<CustomerDetail> optionalCustomerDetail = customerDetailRepository.findById(id);
 
         if (optionalCustomerDetail.isEmpty()){
@@ -77,35 +81,6 @@ public class CustomerDetailServiceImpl implements ICustomerDetailService {
         }
 
         return customerDetailMapper.entityToResponseDto(optionalCustomerDetail.get());
-
-    }
-
-    /**
-     * Method that creates a customer detail passed by parameter
-     * @param customerDetailDTO CustomerDetail to create
-     * @return CustomerDetailResponseDTO
-     */
-    @Override
-    public CustomerDetailResponseDTO createCustomerDetail(CustomerDetailDTO customerDetailDTO){
-
-        CustomerDetailResponseDTO customerDetailResponseDTO;
-
-        if (ObjectUtils.isEmpty(customerDetailDTO)) {
-            throw new BadRequestException("Empty data in the entered entity");
-        }
-
-//        CustomerDetail customerByDni = customerDetailRepository.findByDni(customerDetailDTO.getDni());
-//
-//        if (customerByDni != null) {
-//            throw new BadRequestException("Existing customer detail");
-//        }
-
-        CustomerDetail customerDetailToCreate = customerDetailMapper.requestDtoToEntity(customerDetailDTO);
-        customerDetailToCreate.setCreatedAt(LocalDateTime.now());
-
-        customerDetailResponseDTO = customerDetailMapper.entityToResponseDto(customerDetailRepository.save(customerDetailToCreate));
-
-        return customerDetailResponseDTO;
 
     }
 
@@ -118,8 +93,6 @@ public class CustomerDetailServiceImpl implements ICustomerDetailService {
     @Override
     public CustomerDetailResponseDTO updateCustomerDetail(CustomerDetailDTO customerDetailDTO, Long id){
 
-        CustomerDetailResponseDTO customerDetailResponseDTO;
-
         if (ObjectUtils.isEmpty(customerDetailDTO)) {
             throw new BadRequestException("Empty data in the entered entity");
         }
@@ -130,12 +103,6 @@ public class CustomerDetailServiceImpl implements ICustomerDetailService {
             throw new NotFoundException("CustomerDetail to update not found");
         }
 
-//        CustomerDetail customerByDni = customerDetailRepository.findByDni(customerDetailDTO.getDni());
-//
-//        if(!Objects.equals(customerDetailDTO.getDni(), optionalCustomerDetail.get().getDni()) && customerByDni != null){
-//            throw new BadRequestException("CustomerDetail with DNI entered already exists");
-//        }
-
         CustomerDetail customerDetailToUpdate = customerDetailMapper.requestDtoToEntity(customerDetailDTO);
         customerDetailToUpdate.setCustomerDetailId(optionalCustomerDetail.get().getCustomerDetailId());
         customerDetailToUpdate.setCreatedAt(optionalCustomerDetail.get().getCreatedAt());
@@ -143,26 +110,7 @@ public class CustomerDetailServiceImpl implements ICustomerDetailService {
 
         CustomerDetail customerUpdated = customerDetailRepository.save(customerDetailToUpdate);
 
-        customerDetailResponseDTO = customerDetailMapper.entityToResponseDto(customerUpdated);
-
-        return customerDetailResponseDTO;
-
-    }
-
-    /**
-     * Method that removes a customer by its id
-     * @param id CustomerDetail id
-     */
-    @Override
-    public void deleteCustomerDetailById(Long id){
-
-        Optional<CustomerDetail> optionalCustomerDetail = customerDetailRepository.findById(id);
-
-        if(optionalCustomerDetail.isEmpty()){
-            throw new NotFoundException("Customer Detail to delete not found");
-        }
-
-        customerDetailRepository.delete(optionalCustomerDetail.get());
+        return customerDetailMapper.entityToResponseDto(customerUpdated);
 
     }
 
