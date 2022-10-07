@@ -1,6 +1,7 @@
 package com.ayi.rest.serv.app.repositories;
 
 import com.ayi.rest.serv.app.entities.Address;
+import com.ayi.rest.serv.app.entities.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,7 +17,8 @@ public interface IAddressRepository extends JpaRepository<Address, Long> {
             "(a.postcode = :postcode) AND " +
             "(a.city = :city) AND " +
             "(a.province = :province) AND " +
-            "(a.country = :country)")
+            "(a.country = :country) AND " +
+            "(a.customer = :customer)")
     Optional<Address> isAddressExist(
             @Param("street") String street,
             @Param("streetNumber") String streetNumber,
@@ -24,6 +26,7 @@ public interface IAddressRepository extends JpaRepository<Address, Long> {
             @Param("postcode") String postcode,
             @Param("city") String city,
             @Param("province") String province,
-            @Param("country") String country);
+            @Param("country") String country,
+            @Param("customer") Customer customer);
 
 }

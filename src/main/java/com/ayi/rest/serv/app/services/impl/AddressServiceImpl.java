@@ -33,10 +33,10 @@ public class AddressServiceImpl implements IAddressService {
     private IAddressRepository addressRepository;
 
     @Autowired
-    private ICustomerRepository customerRepository;
+    private IAddressMapper addressMapper;
 
     @Autowired
-    private IAddressMapper addressMapper;
+    private ICustomerRepository customerRepository;
 
     /**
      * Method that returns a list of addresses
@@ -60,6 +60,7 @@ public class AddressServiceImpl implements IAddressService {
         for(Address a:addressPageList){
             addressPageResponseDTO.getEntities().add(addressMapper.entityToResponseDto(a));
         }
+
         addressPageResponseDTO.setTotalPages(addressPageList.getTotalPages());
         addressPageResponseDTO.setCurrentPage(addressPageList.getNumber() + 1);
         addressPageResponseDTO.setPageSize(addressPageList.getSize());
@@ -75,6 +76,10 @@ public class AddressServiceImpl implements IAddressService {
      */
     @Override
     public AddressResponseDTO findAddressById(Long id){
+
+        if (id < 0){
+            throw new BadRequestException("Id cannot be negative");
+        }
 
         Optional<Address> optionalAddress = addressRepository.findById(id);
 
@@ -113,29 +118,18 @@ public class AddressServiceImpl implements IAddressService {
                 addressDTO.getPostcode(),
                 addressDTO.getCity(),
                 addressDTO.getProvince(),
-                addressDTO.getCountry()
+                addressDTO.getCountry(),
+                customerByDni
         );
 
         if(repeatedAddress.isPresent()) {
-
-            for(Address addressCustomer:customerByDni.getAddressList()){
-                if(addressCustomer.getAddressId() == repeatedAddress.get().getAddressId()){
-                    throw new BadRequestException("The address is already associated with the customer");
-                }
-            }
-
-            repeatedAddress.get().getCustomerList().add(customerByDni);
-            customerByDni.getAddressList().add(repeatedAddress.get());
-            createdAddress = addressRepository.save(repeatedAddress.get());
-
+            throw new BadRequestException("The address to add already exists");
         } else {
-
             Address addressToCreate = addressMapper.requestDtoToEntity(addressDTO);
-            addressToCreate.getCustomerList().add(customerByDni);
+            addressToCreate.setCustomer(customerByDni);
             addressToCreate.setCreatedAt(LocalDateTime.now());
             customerByDni.getAddressList().add(addressToCreate);
             createdAddress = addressRepository.save(addressToCreate);
-
         }
 
         return addressMapper.entityToResponseDto(createdAddress);
@@ -151,8 +145,6 @@ public class AddressServiceImpl implements IAddressService {
     @Override
     public AddressResponseDTO updateAddress(AddressDTO addressDTO, Long id){
 
-        AddressResponseDTO addressResponseDTO;
-
         if (ObjectUtils.isEmpty(addressDTO)) {
             throw new BadRequestException("Empty data in the entered entity");
         }
@@ -163,10 +155,6 @@ public class AddressServiceImpl implements IAddressService {
             throw new NotFoundException("Address to update not found");
         }
 
-        if(optionalAddress.get().getCustomerList().size() > 1){
-            throw new BadRequestException("The address cannot be modified, it also belongs to another customer");
-        }
-
         Optional<Address> repeatedAddress = addressRepository.isAddressExist(
                 addressDTO.getStreet(),
                 addressDTO.getStreetNumber(),
@@ -174,23 +162,23 @@ public class AddressServiceImpl implements IAddressService {
                 addressDTO.getPostcode(),
                 addressDTO.getCity(),
                 addressDTO.getProvince(),
-                addressDTO.getCountry()
+                addressDTO.getCountry(),
+                optionalAddress.get().getCustomer()
         );
 
         if (repeatedAddress.isPresent()) {
-            throw new BadRequestException("Existing address");
+            throw new BadRequestException("The address to update already exists");
         }
 
         Address addressToUpdate = addressMapper.requestDtoToEntity(addressDTO);
-        addressToUpdate.setAddressId(optionalAddress.get().getAddressId());
+        addressToUpdate.setAddressId(id);
+        addressToUpdate.setCustomer(optionalAddress.get().getCustomer());
         addressToUpdate.setCreatedAt(optionalAddress.get().getCreatedAt());
         addressToUpdate.setUpdatedAt(LocalDateTime.now());
 
         Address addressUpdated = addressRepository.save(addressToUpdate);
 
-        addressResponseDTO = addressMapper.entityToResponseDto(addressUpdated);
-
-        return addressResponseDTO;
+        return addressMapper.entityToResponseDto(addressUpdated);
 
     }
 

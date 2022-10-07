@@ -1,6 +1,7 @@
 package com.ayi.rest.serv.app.controllers;
 
 import com.ayi.rest.serv.app.dtos.request.CustomerDTO;
+import com.ayi.rest.serv.app.dtos.request.CustomerUpdateDTO;
 import com.ayi.rest.serv.app.dtos.response.CustomerResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.PagesResponseDTO;
 import com.ayi.rest.serv.app.services.ICustomerService;
@@ -132,7 +133,7 @@ public class CustomerController {
     })
     public ResponseEntity<CustomerResponseDTO> updateOneCustomer(
             @ApiParam(name = "customer", required = true, value = "Customer")
-            @Valid @RequestBody CustomerDTO customer,
+            @Valid @RequestBody CustomerUpdateDTO customer,
             @ApiParam(name = "id", required = true, value = "Id", example = "1")
             @PathVariable("id") Long id) {
 
