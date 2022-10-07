@@ -1,5 +1,6 @@
 package com.ayi.rest.serv.app.services.impl;
 
+import com.ayi.rest.serv.app.dtos.request.AddressDTO;
 import com.ayi.rest.serv.app.dtos.request.AddressWithCustomerDniDTO;
 import com.ayi.rest.serv.app.dtos.response.AddressResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.PagesResponseDTO;
@@ -148,12 +149,22 @@ public class AddressServiceImpl implements IAddressService {
      * @return AddressResponseDTO
      */
     @Override
-    public AddressResponseDTO updateAddress(AddressWithCustomerDniDTO addressDTO, Long id){
+    public AddressResponseDTO updateAddress(AddressDTO addressDTO, Long id){
 
         AddressResponseDTO addressResponseDTO;
 
         if (ObjectUtils.isEmpty(addressDTO)) {
             throw new BadRequestException("Empty data in the entered entity");
+        }
+
+        Optional<Address> optionalAddress = addressRepository.findById(id);
+
+        if(optionalAddress.isEmpty()){
+            throw new NotFoundException("Address to update not found");
+        }
+
+        if(optionalAddress.get().getCustomerList().size() > 1){
+            throw new BadRequestException("The address cannot be modified, it also belongs to another customer");
         }
 
         Optional<Address> repeatedAddress = addressRepository.isAddressExist(
@@ -168,12 +179,6 @@ public class AddressServiceImpl implements IAddressService {
 
         if (repeatedAddress.isPresent()) {
             throw new BadRequestException("Existing address");
-        }
-
-        Optional<Address> optionalAddress = addressRepository.findById(id);
-
-        if(optionalAddress.isEmpty()){
-            throw new NotFoundException("Address to update not found");
         }
 
         Address addressToUpdate = addressMapper.requestDtoToEntity(addressDTO);

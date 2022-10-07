@@ -1,5 +1,6 @@
 package com.ayi.rest.serv.app.controllers;
 
+import com.ayi.rest.serv.app.dtos.request.AddressDTO;
 import com.ayi.rest.serv.app.dtos.request.AddressWithCustomerDniDTO;
 import com.ayi.rest.serv.app.dtos.response.AddressResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.PagesResponseDTO;
@@ -134,7 +135,7 @@ public class AddressController {
     })
     public ResponseEntity<AddressResponseDTO> updateOneAddress(
             @ApiParam(name = "address", required = true, value = "Address")
-            @Valid @RequestBody AddressWithCustomerDniDTO address,
+            @Valid @RequestBody AddressDTO address,
             @ApiParam(name = "id", required = true, value = "Id", example = "1")
             @PathVariable("id") Long id) {
 

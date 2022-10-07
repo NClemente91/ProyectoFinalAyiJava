@@ -1,5 +1,6 @@
 package com.ayi.rest.serv.app.services;
 
+import com.ayi.rest.serv.app.dtos.request.AddressDTO;
 import com.ayi.rest.serv.app.dtos.request.AddressWithCustomerDniDTO;
 import com.ayi.rest.serv.app.dtos.response.AddressResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.PagesResponseDTO;
@@ -12,7 +13,7 @@ public interface IAddressService {
 
     AddressResponseDTO createAddress(AddressWithCustomerDniDTO addressDTO);
 
-    AddressResponseDTO updateAddress(AddressWithCustomerDniDTO addressDTO, Long id);
+    AddressResponseDTO updateAddress(AddressDTO addressDTO, Long id);
 
     void deleteAddressById(Long id);
 }
