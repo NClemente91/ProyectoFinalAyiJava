@@ -17,18 +17,14 @@ public class CustomerDetailMapperImpl implements ICustomerDetailMapper {
     @Override
     public CustomerDetailResponseDTO entityToResponseDto(CustomerDetail entity) {
 
-        CustomerDetailResponseDTO customerDetailResponseDTO = new CustomerDetailResponseDTO();
-        modelMapper.map(entity, customerDetailResponseDTO);
-        return customerDetailResponseDTO;
+        return modelMapper.map(entity, CustomerDetailResponseDTO.class);
 
     }
 
     @Override
     public CustomerDetail requestDtoToEntity(CustomerDetailDTO requestDto) {
 
-        CustomerDetail customerDetailEntity = new CustomerDetail();
-        modelMapper.map(requestDto, customerDetailEntity);
-        return customerDetailEntity;
+        return modelMapper.map(requestDto, CustomerDetail.class);
 
     }
 

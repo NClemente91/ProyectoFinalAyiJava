@@ -1,6 +1,7 @@
 package com.ayi.rest.serv.app.mappers.impl;
 
 import com.ayi.rest.serv.app.dtos.request.AddressDTO;
+import com.ayi.rest.serv.app.dtos.request.AddressWithCustomerDniDTO;
 import com.ayi.rest.serv.app.mappers.IAddressMapper;
 import com.ayi.rest.serv.app.dtos.response.AddressResponseDTO;
 import com.ayi.rest.serv.app.entities.Address;
@@ -17,18 +18,21 @@ public class AddressMapperImpl implements IAddressMapper {
     @Override
     public AddressResponseDTO entityToResponseDto(Address entity) {
 
-        AddressResponseDTO addressResponseDTO = new AddressResponseDTO();
-        modelMapper.map(entity, addressResponseDTO);
-        return addressResponseDTO;
+        return modelMapper.map(entity, AddressResponseDTO.class);
+
+    }
+
+    @Override
+    public Address requestDtoToEntity(AddressWithCustomerDniDTO requestDto) {
+
+        return modelMapper.map(requestDto, Address.class);
 
     }
 
     @Override
     public Address requestDtoToEntity(AddressDTO requestDto) {
 
-        Address addressEntity = new Address();
-        modelMapper.map(requestDto, addressEntity);
-        return addressEntity;
+        return modelMapper.map(requestDto, Address.class);
 
     }
 

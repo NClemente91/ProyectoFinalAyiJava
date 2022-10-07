@@ -1,6 +1,6 @@
 package com.ayi.rest.serv.app.services.impl;
 
-import com.ayi.rest.serv.app.dtos.request.AddressDTO;
+import com.ayi.rest.serv.app.dtos.request.AddressWithCustomerDniDTO;
 import com.ayi.rest.serv.app.dtos.response.AddressResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.PagesResponseDTO;
 import com.ayi.rest.serv.app.entities.Address;
@@ -91,7 +91,7 @@ public class AddressServiceImpl implements IAddressService {
      * @return AddressResponseDTO
      */
     @Override
-    public AddressResponseDTO createAddress(AddressDTO addressDTO){
+    public AddressResponseDTO createAddress(AddressWithCustomerDniDTO addressDTO){
 
         Address createdAddress;
 
@@ -116,15 +116,25 @@ public class AddressServiceImpl implements IAddressService {
         );
 
         if(repeatedAddress.isPresent()) {
+
+            for(Address addressCustomer:customerByDni.getAddressList()){
+                if(addressCustomer.getAddressId() == repeatedAddress.get().getAddressId()){
+                    throw new BadRequestException("The address is already associated with the customer");
+                }
+            }
+
             repeatedAddress.get().getCustomerList().add(customerByDni);
             customerByDni.getAddressList().add(repeatedAddress.get());
             createdAddress = addressRepository.save(repeatedAddress.get());
+
         } else {
+
             Address addressToCreate = addressMapper.requestDtoToEntity(addressDTO);
             addressToCreate.getCustomerList().add(customerByDni);
             addressToCreate.setCreatedAt(LocalDateTime.now());
             customerByDni.getAddressList().add(addressToCreate);
             createdAddress = addressRepository.save(addressToCreate);
+
         }
 
         return addressMapper.entityToResponseDto(createdAddress);
@@ -138,7 +148,7 @@ public class AddressServiceImpl implements IAddressService {
      * @return AddressResponseDTO
      */
     @Override
-    public AddressResponseDTO updateAddress(AddressDTO addressDTO, Long id){
+    public AddressResponseDTO updateAddress(AddressWithCustomerDniDTO addressDTO, Long id){
 
         AddressResponseDTO addressResponseDTO;
 

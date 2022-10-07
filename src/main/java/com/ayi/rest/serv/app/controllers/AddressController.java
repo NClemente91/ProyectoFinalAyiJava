@@ -1,6 +1,6 @@
 package com.ayi.rest.serv.app.controllers;
 
-import com.ayi.rest.serv.app.dtos.request.AddressDTO;
+import com.ayi.rest.serv.app.dtos.request.AddressWithCustomerDniDTO;
 import com.ayi.rest.serv.app.dtos.response.AddressResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.PagesResponseDTO;
 import com.ayi.rest.serv.app.services.IAddressService;
@@ -104,7 +104,7 @@ public class AddressController {
     })
     public ResponseEntity<AddressResponseDTO> createNewAddress(
             @ApiParam(name = "address", required = true, value = "Address")
-            @Valid @RequestBody AddressDTO address) {
+            @Valid @RequestBody AddressWithCustomerDniDTO address) {
 
         AddressResponseDTO addressCreated = addressService.createAddress(address);
 
@@ -134,7 +134,7 @@ public class AddressController {
     })
     public ResponseEntity<AddressResponseDTO> updateOneAddress(
             @ApiParam(name = "address", required = true, value = "Address")
-            @Valid @RequestBody AddressDTO address,
+            @Valid @RequestBody AddressWithCustomerDniDTO address,
             @ApiParam(name = "id", required = true, value = "Id", example = "1")
             @PathVariable("id") Long id) {
 

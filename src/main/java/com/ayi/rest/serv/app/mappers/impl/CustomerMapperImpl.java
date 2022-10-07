@@ -24,9 +24,7 @@ public class CustomerMapperImpl implements ICustomerMapper {
     @Override
     public Customer requestDtoToEntity(CustomerDTO requestDto) {
 
-        Customer customerEntity = new Customer();
-        modelMapper.map(requestDto, customerEntity);
-        return customerEntity;
+        return modelMapper.map(requestDto, Customer.class);
 
     }
 

@@ -15,10 +15,10 @@ import java.io.Serializable;
 @Builder
 @ToString
 @ApiModel(
-        value = "AddressDTO",
+        value = "AddressWithCustomerDniDTO",
         description = "Represents the data needed to create or update address."
 )
-public class AddressDTO implements Serializable {
+public class AddressWithCustomerDniDTO implements Serializable {
 
     @ApiModelProperty(position = 1, notes = "Non negative value, Street is required.")
     @NotNull
@@ -54,5 +54,9 @@ public class AddressDTO implements Serializable {
     @NotNull
     @NotEmpty
     private String country;
+
+    @ApiModelProperty(position = 8, notes = "Non null value, Customer Dni is required.")
+    @NotNull
+    private String customerDni;
 
 }

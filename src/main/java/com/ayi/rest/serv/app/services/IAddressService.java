@@ -1,11 +1,8 @@
 package com.ayi.rest.serv.app.services;
 
-import com.ayi.rest.serv.app.dtos.request.AddressDTO;
+import com.ayi.rest.serv.app.dtos.request.AddressWithCustomerDniDTO;
 import com.ayi.rest.serv.app.dtos.response.AddressResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.PagesResponseDTO;
-import com.ayi.rest.serv.app.entities.Address;
-
-import java.util.List;
 
 public interface IAddressService {
 
@@ -13,9 +10,9 @@ public interface IAddressService {
 
     AddressResponseDTO findAddressById(Long id);
 
-    AddressResponseDTO createAddress(AddressDTO addressDTO);
+    AddressResponseDTO createAddress(AddressWithCustomerDniDTO addressDTO);
 
-    AddressResponseDTO updateAddress(AddressDTO addressDTO, Long id);
+    AddressResponseDTO updateAddress(AddressWithCustomerDniDTO addressDTO, Long id);
 
     void deleteAddressById(Long id);
 }
