@@ -8,9 +8,10 @@ import com.ayi.rest.serv.app.entities.Customer;
 import com.ayi.rest.serv.app.exceptions.BadRequestException;
 import com.ayi.rest.serv.app.exceptions.NotFoundException;
 import com.ayi.rest.serv.app.mappers.IAddressMapper;
+import com.ayi.rest.serv.app.mappers.ICustomerMapper;
 import com.ayi.rest.serv.app.repositories.IAddressRepository;
-import com.ayi.rest.serv.app.repositories.ICustomerRepository;
 import com.ayi.rest.serv.app.services.IAddressService;
+import com.ayi.rest.serv.app.services.ICustomerService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,10 +33,13 @@ public class AddressServiceImpl implements IAddressService {
     private IAddressRepository addressRepository;
 
     @Autowired
-    private ICustomerRepository customerRepository;
+    private IAddressMapper addressMapper;
 
     @Autowired
-    private IAddressMapper addressMapper;
+    private ICustomerService customerService;
+
+    @Autowired
+    private ICustomerMapper customerMapper;
 
     /**
      * Method that returns a list of addresses
@@ -99,26 +103,18 @@ public class AddressServiceImpl implements IAddressService {
             throw new BadRequestException("Empty data in the entered entity");
         }
 
-        Customer customerByDni = customerRepository.findByDni(addressDTO.getCustomerDni());
+        Customer customerByDni = customerMapper.responseDtoToEntity(customerService.findCustomerByDni(addressDTO.getCustomerDni()));
 
         if (customerByDni == null) {
             throw new BadRequestException("Cannot create an address without an associated customer");
         }
 
-        Optional<Address> repeatedAddress = addressRepository.isAddressExist(
-                addressDTO.getStreet(),
-                addressDTO.getStreetNumber(),
-                addressDTO.getApartment(),
-                addressDTO.getPostcode(),
-                addressDTO.getCity(),
-                addressDTO.getProvince(),
-                addressDTO.getCountry()
-        );
+        Address repeatedAddress = addressMapper.responseDtoToEntity(addressVerified(addressDTO));
 
-        if(repeatedAddress.isPresent()) {
-            repeatedAddress.get().getCustomerList().add(customerByDni);
-            customerByDni.getAddressList().add(repeatedAddress.get());
-            createdAddress = addressRepository.save(repeatedAddress.get());
+        if(repeatedAddress != null) {
+            repeatedAddress.getCustomerList().add(customerByDni);
+            customerByDni.getAddressList().add(repeatedAddress);
+            createdAddress = addressRepository.save(repeatedAddress);
         } else {
             Address addressToCreate = addressMapper.requestDtoToEntity(addressDTO);
             addressToCreate.getCustomerList().add(customerByDni);
@@ -140,23 +136,14 @@ public class AddressServiceImpl implements IAddressService {
     @Override
     public AddressResponseDTO updateAddress(AddressDTO addressDTO, Long id){
 
-        AddressResponseDTO addressResponseDTO;
-
         if (ObjectUtils.isEmpty(addressDTO)) {
             throw new BadRequestException("Empty data in the entered entity");
         }
 
-        Optional<Address> repeatedAddress = addressRepository.isAddressExist(
-                addressDTO.getStreet(),
-                addressDTO.getStreetNumber(),
-                addressDTO.getApartment(),
-                addressDTO.getPostcode(),
-                addressDTO.getCity(),
-                addressDTO.getProvince(),
-                addressDTO.getCountry()
-        );
+        AddressResponseDTO addressResponseDTO = addressVerified(addressDTO);
+        Address repeatedAddress = addressMapper.responseDtoToEntity(addressResponseDTO);
 
-        if (repeatedAddress.isPresent()) {
+        if (repeatedAddress != null) {
             throw new BadRequestException("Existing address");
         }
 
@@ -193,6 +180,28 @@ public class AddressServiceImpl implements IAddressService {
         }
 
         addressRepository.delete(optionalAddress.get());
+
+    }
+
+    /**
+     * Method that returns an address to verify
+     * @param addressDTO Address to verify
+     * @return AddressResponseDTO
+     */
+    @Override
+    public AddressResponseDTO addressVerified(AddressDTO addressDTO) {
+
+        Address repeatedAddress = addressRepository.isAddressExist(
+                addressDTO.getStreet(),
+                addressDTO.getStreetNumber(),
+                addressDTO.getApartment(),
+                addressDTO.getPostcode(),
+                addressDTO.getCity(),
+                addressDTO.getProvince(),
+                addressDTO.getCountry()
+        );
+
+        return addressMapper.entityToResponseDto(repeatedAddress);
 
     }
 

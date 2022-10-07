@@ -10,6 +10,8 @@ public interface ICustomerService {
 
     CustomerResponseDTO findCustomerById(Long id);
 
+    CustomerResponseDTO findCustomerByDni(String dni);
+
     CustomerResponseDTO createCustomer(CustomerDTO customerDTO);
 
     CustomerResponseDTO updateCustomer(CustomerDTO customerDTO, Long id);

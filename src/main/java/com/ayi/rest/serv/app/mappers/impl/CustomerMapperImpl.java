@@ -1,7 +1,6 @@
 package com.ayi.rest.serv.app.mappers.impl;
 
 import com.ayi.rest.serv.app.dtos.request.CustomerDTO;
-import com.ayi.rest.serv.app.entities.Invoice;
 import com.ayi.rest.serv.app.mappers.ICustomerMapper;
 import com.ayi.rest.serv.app.dtos.response.AddressResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.CustomerDetailResponseDTO;
@@ -24,9 +23,14 @@ public class CustomerMapperImpl implements ICustomerMapper {
     @Override
     public Customer requestDtoToEntity(CustomerDTO requestDto) {
 
-        Customer customerEntity = new Customer();
-        modelMapper.map(requestDto, customerEntity);
-        return customerEntity;
+        return modelMapper.map(requestDto, Customer.class);
+
+    }
+
+    @Override
+    public Customer responseDtoToEntity(CustomerResponseDTO responseDto) {
+
+        return modelMapper.map(responseDto, Customer.class);
 
     }
 

@@ -39,8 +39,6 @@ public class ControllerAdvice {
     })
     public ResponseEntity<ErrorResponseDTO> notFoundHandlerException(HttpServletRequest request, NotFoundException exception) {
 
-        System.out.println(exception.toString());
-
         ErrorResponseDTO error = ErrorResponseDTO
                 .builder()
                     .exception(exception.getClass().getSimpleName())

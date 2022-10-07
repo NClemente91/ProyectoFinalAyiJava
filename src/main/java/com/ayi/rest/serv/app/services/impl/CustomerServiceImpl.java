@@ -99,6 +99,19 @@ public class CustomerServiceImpl implements ICustomerService {
     }
 
     /**
+     * Method that returns a customer by its dni
+     * @param dni Customer dni
+     * @return CustomerResponseDTO
+     */
+    @Override
+    public CustomerResponseDTO findCustomerByDni(String dni) {
+
+        Customer customer = customerRepository.findByDni(dni);
+        return customerMapper.entityToResponseDto(customer);
+
+    }
+
+    /**
      * Method that creates a customer with detail passed by parameter
      * @param customerDTO Customer to create
      * @return CustomerResponseDTO
@@ -122,7 +135,7 @@ public class CustomerServiceImpl implements ICustomerService {
         customerDetail.setCreatedAt(LocalDateTime.now());
         address.setCreatedAt(LocalDateTime.now());
 
-        Optional<Address> repeatedAddress = addressRepository.isAddressExist(
+        Address repeatedAddress = addressRepository.isAddressExist(
                 address.getStreet(),
                 address.getStreetNumber(),
                 address.getApartment(),
@@ -132,8 +145,8 @@ public class CustomerServiceImpl implements ICustomerService {
                 address.getCountry()
         );
 
-        if (repeatedAddress.isPresent()) {
-            customerToCreate.addAddress(repeatedAddress.get());
+        if (repeatedAddress != null) {
+            customerToCreate.addAddress(repeatedAddress);
         } else {
             customerToCreate.addAddress(address);
         }

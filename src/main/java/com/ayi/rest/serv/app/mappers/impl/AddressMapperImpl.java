@@ -17,18 +17,21 @@ public class AddressMapperImpl implements IAddressMapper {
     @Override
     public AddressResponseDTO entityToResponseDto(Address entity) {
 
-        AddressResponseDTO addressResponseDTO = new AddressResponseDTO();
-        modelMapper.map(entity, addressResponseDTO);
-        return addressResponseDTO;
+        return modelMapper.map(entity, AddressResponseDTO.class);
+
+    }
+
+    @Override
+    public Address responseDtoToEntity(AddressResponseDTO responseDto) {
+
+        return modelMapper.map(responseDto, Address.class);
 
     }
 
     @Override
     public Address requestDtoToEntity(AddressDTO requestDto) {
 
-        Address addressEntity = new Address();
-        modelMapper.map(requestDto, addressEntity);
-        return addressEntity;
+        return modelMapper.map(requestDto, Address.class);
 
     }
 

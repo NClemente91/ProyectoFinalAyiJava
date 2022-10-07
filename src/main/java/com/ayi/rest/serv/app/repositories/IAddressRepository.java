@@ -17,7 +17,7 @@ public interface IAddressRepository extends JpaRepository<Address, Long> {
             "(a.city = :city) AND " +
             "(a.province = :province) AND " +
             "(a.country = :country)")
-    Optional<Address> isAddressExist(
+    Address isAddressExist(
             @Param("street") String street,
             @Param("streetNumber") String streetNumber,
             @Param("apartment") String apartment,

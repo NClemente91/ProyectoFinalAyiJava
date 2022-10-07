@@ -18,4 +18,6 @@ public interface IAddressService {
     AddressResponseDTO updateAddress(AddressDTO addressDTO, Long id);
 
     void deleteAddressById(Long id);
+
+    AddressResponseDTO addressVerified(AddressDTO addressDTO);
 }

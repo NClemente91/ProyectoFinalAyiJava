@@ -6,5 +6,8 @@ import com.ayi.rest.serv.app.entities.Address;
 
 public interface IAddressMapper {
     AddressResponseDTO entityToResponseDto(Address entity);
+
+    Address responseDtoToEntity(AddressResponseDTO responseDto);
+
     Address requestDtoToEntity(AddressDTO requestDto);
 }
