@@ -8,6 +8,8 @@ import com.ayi.rest.serv.app.entities.Customer;
 public interface ICustomerMapper {
     Customer requestDtoToEntity(CustomerUpdateDTO requestDto);
 
+    Customer responseDtoToEntity(CustomerResponseDTO responseDto);
+
     CustomerResponseDTO entityToResponseDto(Customer entity);
     Customer requestDtoToEntity(CustomerDTO requestDto);
 

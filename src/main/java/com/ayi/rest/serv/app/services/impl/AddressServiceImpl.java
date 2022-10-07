@@ -3,15 +3,17 @@ package com.ayi.rest.serv.app.services.impl;
 import com.ayi.rest.serv.app.dtos.request.AddressDTO;
 import com.ayi.rest.serv.app.dtos.request.AddressWithCustomerDniDTO;
 import com.ayi.rest.serv.app.dtos.response.AddressResponseDTO;
+import com.ayi.rest.serv.app.dtos.response.CustomerResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.PagesResponseDTO;
 import com.ayi.rest.serv.app.entities.Address;
 import com.ayi.rest.serv.app.entities.Customer;
 import com.ayi.rest.serv.app.exceptions.BadRequestException;
 import com.ayi.rest.serv.app.exceptions.NotFoundException;
 import com.ayi.rest.serv.app.mappers.IAddressMapper;
+import com.ayi.rest.serv.app.mappers.ICustomerMapper;
 import com.ayi.rest.serv.app.repositories.IAddressRepository;
-import com.ayi.rest.serv.app.repositories.ICustomerRepository;
 import com.ayi.rest.serv.app.services.IAddressService;
+import com.ayi.rest.serv.app.services.ICustomerService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -31,12 +33,12 @@ public class AddressServiceImpl implements IAddressService {
 
     @Autowired
     private IAddressRepository addressRepository;
-
     @Autowired
     private IAddressMapper addressMapper;
-
     @Autowired
-    private ICustomerRepository customerRepository;
+    private ICustomerService customerService;
+    @Autowired
+    private ICustomerMapper customerMapper;
 
     /**
      * Method that returns a list of addresses
@@ -105,7 +107,8 @@ public class AddressServiceImpl implements IAddressService {
             throw new BadRequestException("Empty data in the entered entity");
         }
 
-        Customer customerByDni = customerRepository.findByDni(addressDTO.getCustomerDni());
+        CustomerResponseDTO customerResponse = customerService.findCustomerByDni(addressDTO.getCustomerDni());
+        Customer customerByDni = customerMapper.responseDtoToEntity(customerResponse);
 
         if (customerByDni == null) {
             throw new BadRequestException("Cannot create an address without an associated customer");

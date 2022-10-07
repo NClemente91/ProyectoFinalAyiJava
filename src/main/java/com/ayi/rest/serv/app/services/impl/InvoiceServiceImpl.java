@@ -2,15 +2,17 @@ package com.ayi.rest.serv.app.services.impl;
 
 import com.ayi.rest.serv.app.dtos.request.InvoiceDTO;
 import com.ayi.rest.serv.app.dtos.request.InvoiceUpdateDTO;
+import com.ayi.rest.serv.app.dtos.response.CustomerResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.InvoiceResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.PagesResponseDTO;
 import com.ayi.rest.serv.app.entities.Customer;
 import com.ayi.rest.serv.app.entities.Invoice;
 import com.ayi.rest.serv.app.exceptions.BadRequestException;
 import com.ayi.rest.serv.app.exceptions.NotFoundException;
+import com.ayi.rest.serv.app.mappers.ICustomerMapper;
 import com.ayi.rest.serv.app.mappers.IInvoiceMapper;
-import com.ayi.rest.serv.app.repositories.ICustomerRepository;
 import com.ayi.rest.serv.app.repositories.IInvoiceRepository;
+import com.ayi.rest.serv.app.services.ICustomerService;
 import com.ayi.rest.serv.app.services.IInvoiceService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +34,10 @@ public class InvoiceServiceImpl implements IInvoiceService {
 
     @Autowired
     private IInvoiceRepository invoiceRepository;
-
     @Autowired
-    private ICustomerRepository customerRepository;
-
+    private ICustomerService customerService;
+    @Autowired
+    private ICustomerMapper customerMapper;
     @Autowired
     private IInvoiceMapper invoiceMapper;
 
@@ -107,7 +109,8 @@ public class InvoiceServiceImpl implements IInvoiceService {
             throw new BadRequestException("The invoice total must be greater than zero");
         }
 
-        Customer customerByDni = customerRepository.findByDni(invoiceDTO.getCustomerDni());
+        CustomerResponseDTO customerResponse = customerService.findCustomerByDni(invoiceDTO.getCustomerDni());
+        Customer customerByDni = customerMapper.responseDtoToEntity(customerResponse);
 
         if (customerByDni == null) {
             throw new BadRequestException("Customer does not exist");

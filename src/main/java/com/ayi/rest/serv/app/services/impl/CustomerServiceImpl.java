@@ -40,12 +40,11 @@ public class CustomerServiceImpl implements ICustomerService {
     @Autowired
     private ICustomerRepository customerRepository;
     @Autowired
+    private IAddressMapper addressMapper;
+    @Autowired
     private ICustomerMapper customerMapper;
     @Autowired
     private ICustomerDetailMapper customerDetailMapper;
-    @Autowired
-    private IAddressMapper addressMapper;
-
     @Autowired
     private IInvoiceMapper invoiceMapper;
 
@@ -127,6 +126,20 @@ public class CustomerServiceImpl implements ICustomerService {
         }
 
         return customerMapper.entityToResponseDto(optionalCustomer.get());
+
+    }
+
+    /**
+     * Method that returns a customer by its dni
+     * @param dni Customer dni
+     * @return CustomerResponseDTO
+     */
+    @Override
+    public CustomerResponseDTO findCustomerByDni(String dni) {
+
+        Customer customer = customerRepository.findByDni(dni);
+
+        return customerMapper.entityToResponseDto(customer);
 
     }
 

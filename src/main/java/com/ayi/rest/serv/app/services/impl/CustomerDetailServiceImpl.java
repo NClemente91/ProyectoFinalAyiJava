@@ -28,7 +28,6 @@ public class CustomerDetailServiceImpl implements ICustomerDetailService {
 
     @Autowired
     private ICustomerDetailRepository customerDetailRepository;
-
     @Autowired
     private ICustomerDetailMapper customerDetailMapper;
 
