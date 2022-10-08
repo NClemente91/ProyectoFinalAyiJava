@@ -112,10 +112,6 @@ public class InvoiceServiceImpl implements IInvoiceService {
         CustomerResponseDTO customerResponse = customerService.findCustomerByDni(invoiceDTO.getCustomerDni());
         Customer customerByDni = customerMapper.responseDtoToEntity(customerResponse);
 
-        if (customerByDni == null) {
-            throw new BadRequestException("Customer does not exist");
-        }
-
         Invoice invoiceToCreate = invoiceMapper.requestDtoToEntity(invoiceDTO);
         invoiceToCreate.setCreatedAt(LocalDateTime.now());
         invoiceToCreate.setCustomer(customerByDni);

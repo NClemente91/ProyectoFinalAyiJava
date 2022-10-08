@@ -6,6 +6,7 @@ import com.ayi.rest.serv.app.exceptions.NotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -20,7 +21,8 @@ public class ControllerAdvice {
     @ExceptionHandler(value = {
             BadRequestException.class,
             MethodArgumentTypeMismatchException.class,
-            DataIntegrityViolationException.class
+            DataIntegrityViolationException.class,
+            HttpMessageNotReadableException.class
     })
     public ResponseEntity<ErrorResponseDTO> badRequestHandlerException(HttpServletRequest request, RuntimeException exception) {
         ErrorResponseDTO error = ErrorResponseDTO
@@ -38,9 +40,6 @@ public class ControllerAdvice {
             IllegalArgumentException.class,
     })
     public ResponseEntity<ErrorResponseDTO> notFoundHandlerException(HttpServletRequest request, NotFoundException exception) {
-
-        System.out.println(exception.toString());
-
         ErrorResponseDTO error = ErrorResponseDTO
                 .builder()
                     .exception(exception.getClass().getSimpleName())

@@ -2,6 +2,7 @@ package com.ayi.rest.serv.app.controllers;
 
 import com.ayi.rest.serv.app.dtos.request.InvoiceDTO;
 import com.ayi.rest.serv.app.dtos.request.InvoiceUpdateDTO;
+import com.ayi.rest.serv.app.dtos.response.CustomerResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.InvoiceResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.PagesResponseDTO;
 import com.ayi.rest.serv.app.services.IInvoiceService;
@@ -33,12 +34,13 @@ public class InvoiceController {
             response = InvoiceResponseDTO[].class
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200,
-                    message = "Body content with basic information about invoice",
+            @ApiResponse(
+                    code = 200,
+                    message = "Body content with information about an invoice list",
                     response = InvoiceResponseDTO[].class),
             @ApiResponse(
-                    code = 204,
-                    message = "Body content empty")
+                    code = 404,
+                    message = "Information about an invoice list not found")
     })
     public ResponseEntity<PagesResponseDTO<InvoiceResponseDTO>> findAllInvoices(
             @ApiParam(value = "Page to display", required = true, example = "0")
@@ -64,12 +66,13 @@ public class InvoiceController {
             response = InvoiceResponseDTO.class
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200,
-                    message = "Body content with basic information about invoice",
-                    response = InvoiceResponseDTO.class),
             @ApiResponse(
-                    code = 204,
-                    message = "Body content empty")
+                    code = 200,
+                    message = "Body content with information about an invoice",
+                    response = CustomerResponseDTO.class),
+            @ApiResponse(
+                    code = 404,
+                    message = "Information about an invoice not found")
     })
     public ResponseEntity<InvoiceResponseDTO> findOneInvoice(
             @ApiParam(name = "id", required = true, value = "Id", example = "1")
@@ -93,15 +96,13 @@ public class InvoiceController {
             response = InvoiceResponseDTO.class
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 201,
-                    message = "Body content with basic information about invoice",
+            @ApiResponse(
+                    code = 201,
+                    message = "Body content with information about a successfully created invoice",
                     response = InvoiceResponseDTO.class),
             @ApiResponse(
-                    code = 204,
-                    message = "Body content empty"),
-            @ApiResponse(
                     code = 400,
-                    message = "Incompatible information entered")
+                    message = "Information about an error creating a new invoice")
     })
     public ResponseEntity<InvoiceResponseDTO> createNewInvoice(
             @ApiParam(name = "invoice", required = true, value = "Invoice")
@@ -124,12 +125,13 @@ public class InvoiceController {
             response = InvoiceResponseDTO.class
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200,
-                    message = "Body content with basic information about invoice",
-                    response = InvoiceResponseDTO.class),
             @ApiResponse(
-                    code = 204,
-                    message = "Body content empty")
+                    code = 200,
+                    message = "Body content with information about a successfully updated invoice",
+                    response = CustomerResponseDTO.class),
+            @ApiResponse(
+                    code = 400,
+                    message = "Information about an error updating a existing invoice")
     })
     public ResponseEntity<InvoiceResponseDTO> updateOneInvoice(
             @ApiParam(name = "invoice", required = true, value = "Invoice")
@@ -156,7 +158,13 @@ public class InvoiceController {
     @ApiResponses(value = {
             @ApiResponse(
                     code = 204,
-                    message = "Body content empty")
+                    message = "Body content about a successfully deleted invoice"),
+            @ApiResponse(
+                    code = 400,
+                    message = "Information about an error deleting a existing invoice"),
+            @ApiResponse(
+                    code = 404,
+                    message = "Information about an invoice to delete not found")
     })
     public ResponseEntity<Void> deleteOneInvoice(
             @ApiParam(name = "id", required = true, value = "Id", example = "1")

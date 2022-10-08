@@ -3,6 +3,7 @@ package com.ayi.rest.serv.app.services.impl;
 import com.ayi.rest.serv.app.dtos.request.CustomerDTO;
 import com.ayi.rest.serv.app.dtos.request.CustomerUpdateDTO;
 import com.ayi.rest.serv.app.dtos.response.InvoiceResponseDTO;
+import com.ayi.rest.serv.app.dtos.response.InvoiceWithoutCustomerResponseDTO;
 import com.ayi.rest.serv.app.entities.Invoice;
 import com.ayi.rest.serv.app.mappers.IAddressMapper;
 import com.ayi.rest.serv.app.dtos.response.CustomerResponseDTO;
@@ -80,14 +81,14 @@ public class CustomerServiceImpl implements ICustomerService {
     }
 
     /**
-     * Method that returns a customer by its id
+     * Method that returns customer invoices by its id
      * @param id Customer id
      * @return CustomerResponseDTO
      */
     @Override
-    public List<InvoiceResponseDTO> findAllInvoicesById(Long id) {
+    public List<InvoiceWithoutCustomerResponseDTO> findAllInvoicesById(Long id) {
 
-        List<InvoiceResponseDTO> invoicesList = new ArrayList<>();
+        List<InvoiceWithoutCustomerResponseDTO> invoicesList = new ArrayList<>();
 
         if (id < 0) {
             throw new BadRequestException("Id cannot be negative");
@@ -100,7 +101,7 @@ public class CustomerServiceImpl implements ICustomerService {
         }
 
         for(Invoice i:optionalCustomer.get().getInvoiceList()){
-            invoicesList.add(invoiceMapper.entityToResponseDto(i));
+            invoicesList.add(invoiceMapper.entityToInvoiceWithoutCustomerResponseDto(i));
         }
 
         return invoicesList;
@@ -122,7 +123,7 @@ public class CustomerServiceImpl implements ICustomerService {
         Optional<Customer> optionalCustomer = customerRepository.findById(id);
 
         if (optionalCustomer.isEmpty()) {
-            throw new IllegalStateException("Record with id " + id + " does not exist");
+            throw new BadRequestException("Customer with id " + id + " does not exist");
         }
 
         return customerMapper.entityToResponseDto(optionalCustomer.get());
@@ -138,6 +139,10 @@ public class CustomerServiceImpl implements ICustomerService {
     public CustomerResponseDTO findCustomerByDni(String dni) {
 
         Customer customer = customerRepository.findByDni(dni);
+
+        if (customer == null) {
+            throw new BadRequestException("Customer with dni " + dni + " does not exist");
+        }
 
         return customerMapper.entityToResponseDto(customer);
 
@@ -229,6 +234,10 @@ public class CustomerServiceImpl implements ICustomerService {
 
         if(optionalCustomer.isEmpty()){
             throw new NotFoundException("Customer to delete not found");
+        }
+
+        if(!optionalCustomer.get().getInvoiceList().isEmpty()){
+            throw new BadRequestException("Cannot delete a customer with associated invoices");
         }
 
         customerRepository.delete(optionalCustomer.get());

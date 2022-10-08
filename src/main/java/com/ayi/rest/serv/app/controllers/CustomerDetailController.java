@@ -2,6 +2,7 @@ package com.ayi.rest.serv.app.controllers;
 
 import com.ayi.rest.serv.app.dtos.request.CustomerDetailDTO;
 import com.ayi.rest.serv.app.dtos.response.CustomerDetailResponseDTO;
+import com.ayi.rest.serv.app.dtos.response.CustomerResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.PagesResponseDTO;
 import com.ayi.rest.serv.app.services.ICustomerDetailService;
 import io.swagger.annotations.*;
@@ -32,12 +33,13 @@ public class CustomerDetailController {
             response = CustomerDetailResponseDTO[].class
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200,
-                    message = "Body content with basic information about customers details",
+            @ApiResponse(
+                    code = 200,
+                    message = "Body content with information about a list of customer details",
                     response = CustomerDetailResponseDTO[].class),
             @ApiResponse(
-                    code = 204,
-                    message = "Body content empty")
+                    code = 404,
+                    message = "Information about a list of customer details not found")
     })
     public ResponseEntity<PagesResponseDTO<CustomerDetailResponseDTO>> findAllCustomersDetails(
             @ApiParam(value = "Page to display", required = true, example = "0")
@@ -63,12 +65,13 @@ public class CustomerDetailController {
             response = CustomerDetailResponseDTO.class
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200,
-                    message = "Body content with basic information about customer detail",
+            @ApiResponse(
+                    code = 200,
+                    message = "Body content with information about a customer detail",
                     response = CustomerDetailResponseDTO.class),
             @ApiResponse(
-                    code = 204,
-                    message = "Body content empty")
+                    code = 404,
+                    message = "Information about a customer detail not found")
     })
     public ResponseEntity<CustomerDetailResponseDTO> findOneCustomerDetail(
             @ApiParam(name = "id", required = true, value = "Id", example = "1")
@@ -93,12 +96,13 @@ public class CustomerDetailController {
             response = CustomerDetailResponseDTO.class
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200,
-                    message = "Body content with basic information about customer detail",
+            @ApiResponse(
+                    code = 200,
+                    message = "Body content with information about a successfully updated customer detail",
                     response = CustomerDetailResponseDTO.class),
             @ApiResponse(
-                    code = 204,
-                    message = "Body content empty")
+                    code = 400,
+                    message = "Information about an error updating a existing customer detail")
     })
     public ResponseEntity<CustomerDetailResponseDTO> updateOneCustomerDetail(
             @ApiParam(name = "customerDetail", required = true, value = "CustomerDetail")

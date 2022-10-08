@@ -1,12 +1,10 @@
-package com.ayi.rest.serv.app.dtos.request;
+package com.ayi.rest.serv.app.dtos.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -17,29 +15,28 @@ import java.time.LocalDateTime;
 @Builder
 @ToString
 @ApiModel(
-        value = "InvoiceDTO",
-        description = "Represents the data needed to create or update invoices."
+        value = "InvoiceWithoutCustomerResponseDTO",
+        description = "Represents the data returned for invoices"
 )
-public class InvoiceDTO implements Serializable {
+public class InvoiceWithoutCustomerResponseDTO implements Serializable {
+
+    private Long invoiceId;
 
     @ApiModelProperty(position = 1, notes = "Non negative value, InvoiceType is required.")
-    @NotNull
-    @NotEmpty
     private String invoiceType;
 
     @ApiModelProperty(position = 2, notes = "Non negative value, Description is required.")
-    @NotNull
-    @NotEmpty
     private String description;
 
     @ApiModelProperty(position = 3, notes = "Non negative value, Total is required.")
-    @NotNull
-    @NotEmpty
     private Double total;
 
-    @ApiModelProperty(position = 4, notes = "Non null value, Customer Dni is required.")
-    @NotNull
-    @NotEmpty
-    private String customerDni;
+    @ApiModelProperty(position = 4, notes = "Non negative value, CreatedAt is required.")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDateTime createdAt;
+
+    @ApiModelProperty(position = 5, notes = "Non negative value, UpdatedAt is not required.")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDateTime updatedAt;
 
 }

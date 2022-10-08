@@ -32,7 +32,6 @@ public class AddressWithCustomerDniDTO implements Serializable {
 
     @ApiModelProperty(position = 3, notes = "Non negative value, Apartment is not required.")
     @NotNull
-    @NotEmpty
     private String apartment;
 
     @ApiModelProperty(position = 4, notes = "Non negative value, Postcode is required.")
@@ -57,6 +56,7 @@ public class AddressWithCustomerDniDTO implements Serializable {
 
     @ApiModelProperty(position = 8, notes = "Non null value, Customer Dni is required.")
     @NotNull
+    @NotEmpty
     private String customerDni;
 
 }

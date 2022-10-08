@@ -3,7 +3,7 @@ package com.ayi.rest.serv.app.controllers;
 import com.ayi.rest.serv.app.dtos.request.CustomerDTO;
 import com.ayi.rest.serv.app.dtos.request.CustomerUpdateDTO;
 import com.ayi.rest.serv.app.dtos.response.CustomerResponseDTO;
-import com.ayi.rest.serv.app.dtos.response.InvoiceResponseDTO;
+import com.ayi.rest.serv.app.dtos.response.InvoiceWithoutCustomerResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.PagesResponseDTO;
 import com.ayi.rest.serv.app.services.ICustomerService;
 import io.swagger.annotations.*;
@@ -21,7 +21,6 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/customer", produces = {MediaType.APPLICATION_JSON_VALUE})
 public class CustomerController {
-
     private ICustomerService customerService;
 
     /**
@@ -35,12 +34,13 @@ public class CustomerController {
             response = CustomerResponseDTO[].class
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200,
-                    message = "Body content with basic information about customer",
+            @ApiResponse(
+                    code = 200,
+                    message = "Body content with information about a customer list",
                     response = CustomerResponseDTO[].class),
             @ApiResponse(
-                    code = 204,
-                    message = "Body content empty")
+                    code = 404,
+                    message = "Information about a customer list not found")
     })
     public ResponseEntity<PagesResponseDTO<CustomerResponseDTO>> findAllCustomers(
             @ApiParam(value = "Page to display", required = true, example = "0")
@@ -57,27 +57,28 @@ public class CustomerController {
     /**
      * Endpoint that returns all customer invoices
      * @param id Customer id
-     * @return List<InvoiceResponseDTO>
+     * @return List<InvoiceWithoutCustomerResponseDTO>
      */
     @GetMapping(value = "/invoices/{id}")
     @ApiOperation(
             value = "Retrieves all customer invoices",
             httpMethod = "GET",
-            response = InvoiceResponseDTO[].class
+            response = InvoiceWithoutCustomerResponseDTO[].class
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200,
-                    message = "Body content with basic information about customer",
-                    response = InvoiceResponseDTO[].class),
             @ApiResponse(
-                    code = 204,
-                    message = "Body content empty")
+                    code = 200,
+                    message = "Body content with information about a list of invoices from a customer",
+                    response = InvoiceWithoutCustomerResponseDTO[].class),
+            @ApiResponse(
+                    code = 404,
+                    message = "Information about a list of invoices from a customer not found")
     })
-    public ResponseEntity<List<InvoiceResponseDTO>> findCustomerInvoicesById(
+    public ResponseEntity<List<InvoiceWithoutCustomerResponseDTO>> findCustomerInvoicesById(
             @ApiParam(name = "id", required = true, value = "Id", example = "1")
             @PathVariable("id") Long id) {
 
-        List<InvoiceResponseDTO> customerInvoices = customerService.findAllInvoicesById(id);
+        List<InvoiceWithoutCustomerResponseDTO> customerInvoices = customerService.findAllInvoicesById(id);
 
         return new ResponseEntity<>(customerInvoices, HttpStatus.OK);
 
@@ -95,12 +96,13 @@ public class CustomerController {
             response = CustomerResponseDTO.class
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200,
-                    message = "Body content with basic information about customer",
+            @ApiResponse(
+                    code = 200,
+                    message = "Body content with information about a customer",
                     response = CustomerResponseDTO.class),
             @ApiResponse(
-                    code = 204,
-                    message = "Body content empty")
+                    code = 404,
+                    message = "Information about a customer not found")
     })
     public ResponseEntity<CustomerResponseDTO> findOneCustomer(
             @ApiParam(name = "id", required = true, value = "Id", example = "1")
@@ -124,15 +126,13 @@ public class CustomerController {
             response = CustomerResponseDTO.class
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 201,
-                    message = "Body content with basic information about customer",
+            @ApiResponse(
+                    code = 201,
+                    message = "Body content with information about a successfully created customer",
                     response = CustomerResponseDTO.class),
             @ApiResponse(
-                    code = 204,
-                    message = "Body content empty"),
-            @ApiResponse(
                     code = 400,
-                    message = "Incompatible information entered")
+                    message = "Information about an error creating a new customer")
     })
     public ResponseEntity<CustomerResponseDTO> createNewCustomer(
             @ApiParam(name = "customer", required = true, value = "Customer")
@@ -155,12 +155,13 @@ public class CustomerController {
             response = CustomerResponseDTO.class
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200,
-                    message = "Body content with basic information about customer",
+            @ApiResponse(
+                    code = 200,
+                    message = "Body content with information about a successfully updated customer",
                     response = CustomerResponseDTO.class),
             @ApiResponse(
-                    code = 204,
-                    message = "Body content empty")
+                    code = 400,
+                    message = "Information about an error updating a existing customer")
     })
     public ResponseEntity<CustomerResponseDTO> updateOneCustomer(
             @ApiParam(name = "customer", required = true, value = "Customer")
@@ -187,7 +188,13 @@ public class CustomerController {
     @ApiResponses(value = {
             @ApiResponse(
                     code = 204,
-                    message = "Body content empty")
+                    message = "Body content about a successfully deleted customer"),
+            @ApiResponse(
+                    code = 400,
+                    message = "Information about an error deleting a existing customer"),
+            @ApiResponse(
+                    code = 404,
+                    message = "Information about a customer to delete not found")
     })
     public ResponseEntity<Void> deleteOneCustomer(
             @ApiParam(name = "id", required = true, value = "Id", example = "1")

@@ -19,7 +19,6 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping(value = "/address", produces = {MediaType.APPLICATION_JSON_VALUE})
 public class AddressController {
-
     private IAddressService addressService;
 
     /**
@@ -33,12 +32,13 @@ public class AddressController {
             response = AddressResponseDTO[].class
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200,
-                    message = "Body content with basic information about address",
+            @ApiResponse(
+                    code = 200,
+                    message = "Body content with information about an address list",
                     response = AddressResponseDTO[].class),
             @ApiResponse(
-                    code = 204,
-                    message = "Body content empty")
+                    code = 404,
+                    message = "Information about an address list not found")
     })
     public ResponseEntity<PagesResponseDTO<AddressResponseDTO>> findAllAddresses(
             @ApiParam(value = "Page to display", required = true, example = "0")
@@ -64,12 +64,13 @@ public class AddressController {
             response = AddressResponseDTO.class
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200,
-                    message = "Body content with basic information about address",
+            @ApiResponse(
+                    code = 200,
+                    message = "Body content with information about an address",
                     response = AddressResponseDTO.class),
             @ApiResponse(
-                    code = 204,
-                    message = "Body content empty")
+                    code = 404,
+                    message = "Information about an address not found")
     })
     public ResponseEntity<AddressResponseDTO> findOneAddress(
             @ApiParam(name = "id", required = true, value = "Id", example = "1")
@@ -93,15 +94,13 @@ public class AddressController {
             response = AddressResponseDTO.class
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 201,
-                    message = "Body content with basic information about address",
+            @ApiResponse(
+                    code = 201,
+                    message = "Body content with information about a successfully created address",
                     response = AddressResponseDTO.class),
             @ApiResponse(
-                    code = 204,
-                    message = "Body content empty"),
-            @ApiResponse(
                     code = 400,
-                    message = "Incompatible information entered")
+                    message = "Information about an error creating a new address")
     })
     public ResponseEntity<AddressResponseDTO> createNewAddress(
             @ApiParam(name = "address", required = true, value = "Address")
@@ -126,12 +125,13 @@ public class AddressController {
             response = AddressResponseDTO.class
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200,
-                    message = "Body content with basic information about address",
+            @ApiResponse(
+                    code = 200,
+                    message = "Body content with information about a successfully updated address",
                     response = AddressResponseDTO.class),
             @ApiResponse(
-                    code = 204,
-                    message = "Body content empty")
+                    code = 400,
+                    message = "Information about an error updating a existing address")
     })
     public ResponseEntity<AddressResponseDTO> updateOneAddress(
             @ApiParam(name = "address", required = true, value = "Address")
@@ -158,7 +158,13 @@ public class AddressController {
     @ApiResponses(value = {
             @ApiResponse(
                     code = 204,
-                    message = "Body content empty")
+                    message = "Body content about a successfully deleted address"),
+            @ApiResponse(
+                    code = 400,
+                    message = "Information about an error deleting a existing address"),
+            @ApiResponse(
+                    code = 404,
+                    message = "Information about an address to delete not found")
     })
     public ResponseEntity<Void> deleteOneAddress(
             @ApiParam(name = "id", required = true, value = "Id", example = "1")
