@@ -49,7 +49,11 @@ public class AddressServiceImpl implements IAddressService {
     @Override
     public PagesResponseDTO<AddressResponseDTO> findAllAddresses(Integer page, Integer size){
 
-        PagesResponseDTO<AddressResponseDTO> addressPageResponseDTO = new PagesResponseDTO<AddressResponseDTO>();
+        if(page < 0 || size <= 0) {
+            throw new BadRequestException("The page cannot be less than zero and the size less than one");
+        }
+
+        PagesResponseDTO<AddressResponseDTO> addressPageResponseDTO = new PagesResponseDTO<>();
 
         Pageable pageable = PageRequest.of(page, size);
 
@@ -102,6 +106,8 @@ public class AddressServiceImpl implements IAddressService {
     public AddressResponseDTO createAddress(AddressWithCustomerDniDTO addressDTO){
 
         Address createdAddress;
+
+        System.out.println(addressDTO);
 
         if (ObjectUtils.isEmpty(addressDTO)) {
             throw new BadRequestException("Empty data in the entered entity");

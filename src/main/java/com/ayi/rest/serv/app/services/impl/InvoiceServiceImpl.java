@@ -50,7 +50,11 @@ public class InvoiceServiceImpl implements IInvoiceService {
     @Override
     public PagesResponseDTO<InvoiceResponseDTO> findAllInvoices(Integer page, Integer size){
 
-        PagesResponseDTO<InvoiceResponseDTO> invoicePageResponseDTO = new PagesResponseDTO<InvoiceResponseDTO>();
+        if(page < 0 || size <= 0) {
+            throw new BadRequestException("The page cannot be less than zero and the size less than one");
+        }
+
+        PagesResponseDTO<InvoiceResponseDTO> invoicePageResponseDTO = new PagesResponseDTO<>();
 
         Pageable pageable = PageRequest.of(page, size);
 

@@ -40,7 +40,11 @@ public class CustomerDetailServiceImpl implements ICustomerDetailService {
     @Override
     public PagesResponseDTO<CustomerDetailResponseDTO> findAllCustomersDetails(Integer page, Integer size){
 
-        PagesResponseDTO<CustomerDetailResponseDTO> customerDetailPageResponseDTO = new PagesResponseDTO<CustomerDetailResponseDTO>();
+        if(page < 0 || size <= 0) {
+            throw new BadRequestException("The page cannot be less than zero and the size less than one");
+        }
+
+        PagesResponseDTO<CustomerDetailResponseDTO> customerDetailPageResponseDTO = new PagesResponseDTO<>();
 
         Pageable pageable = PageRequest.of(page, size);
 

@@ -2,7 +2,6 @@ package com.ayi.rest.serv.app.services.impl;
 
 import com.ayi.rest.serv.app.dtos.request.CustomerDTO;
 import com.ayi.rest.serv.app.dtos.request.CustomerUpdateDTO;
-import com.ayi.rest.serv.app.dtos.response.InvoiceResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.InvoiceWithoutCustomerResponseDTO;
 import com.ayi.rest.serv.app.entities.Invoice;
 import com.ayi.rest.serv.app.mappers.IAddressMapper;
@@ -58,7 +57,11 @@ public class CustomerServiceImpl implements ICustomerService {
     @Override
     public PagesResponseDTO<CustomerResponseDTO> findAllCustomers(Integer page, Integer size){
 
-        PagesResponseDTO<CustomerResponseDTO> customerPageResponseDTO = new PagesResponseDTO<CustomerResponseDTO>();
+        if(page < 0 || size <= 0) {
+            throw new BadRequestException("The page cannot be less than zero and the size less than one");
+        }
+
+        PagesResponseDTO<CustomerResponseDTO> customerPageResponseDTO = new PagesResponseDTO<>();
 
         Pageable pageable = PageRequest.of(page, size);
 

@@ -7,24 +7,26 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.servlet.http.HttpServletRequest;
 
 @RestControllerAdvice
-public class ControllerAdvice {
+public class ApiExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(value = {
-            BadRequestException.class,
+    @ExceptionHandler({
+
             MethodArgumentTypeMismatchException.class,
+            MethodArgumentNotValidException.class,
             DataIntegrityViolationException.class,
-            HttpMessageNotReadableException.class
+            HttpMessageNotReadableException.class,
+            BadRequestException.class,
     })
-    public ResponseEntity<ErrorResponseDTO> badRequestHandlerException(HttpServletRequest request, RuntimeException exception) {
+    @ResponseBody
+    public ResponseEntity<ErrorResponseDTO> badRequestHandlerException(HttpServletRequest request, Exception exception) {
         ErrorResponseDTO error = ErrorResponseDTO
                 .builder()
                     .exception(exception.getClass().getSimpleName())
@@ -35,11 +37,12 @@ public class ControllerAdvice {
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(value = {
+    @ExceptionHandler({
             NotFoundException.class,
             IllegalArgumentException.class,
     })
-    public ResponseEntity<ErrorResponseDTO> notFoundHandlerException(HttpServletRequest request, NotFoundException exception) {
+    @ResponseBody
+    public ResponseEntity<ErrorResponseDTO> notFoundHandlerException(HttpServletRequest request, Exception exception) {
         ErrorResponseDTO error = ErrorResponseDTO
                 .builder()
                     .exception(exception.getClass().getSimpleName())
@@ -51,8 +54,9 @@ public class ControllerAdvice {
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(value = RuntimeException.class)
-    public ResponseEntity<ErrorResponseDTO> runtimeHandlerException(HttpServletRequest request, RuntimeException exception) {
+    @ExceptionHandler({Exception.class})
+    @ResponseBody
+    public ResponseEntity<ErrorResponseDTO> runtimeHandlerException(HttpServletRequest request, Exception exception) {
         ErrorResponseDTO error = ErrorResponseDTO
                 .builder()
                 .exception(exception.getClass().getSimpleName())

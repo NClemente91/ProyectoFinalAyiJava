@@ -3,7 +3,6 @@ package com.ayi.rest.serv.app.services;
 import com.ayi.rest.serv.app.dtos.request.CustomerDTO;
 import com.ayi.rest.serv.app.dtos.request.CustomerUpdateDTO;
 import com.ayi.rest.serv.app.dtos.response.CustomerResponseDTO;
-import com.ayi.rest.serv.app.dtos.response.InvoiceResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.InvoiceWithoutCustomerResponseDTO;
 import com.ayi.rest.serv.app.dtos.response.PagesResponseDTO;
 
