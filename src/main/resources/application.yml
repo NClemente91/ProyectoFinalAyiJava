@@ -1,7 +1,6 @@
 # Se agregan las properties propias del proyecto
 #
 # MS Settings.
-#jdbc:mysql://localhost:3306/practica_jpa_comercio?serverTimezone=UTC
 spring:
   # Datasource settings (se debe agregar la información de la base de datos local)
   datasource:
@@ -16,7 +15,7 @@ spring:
         format_sql: true
     hibernate:
       ddl-auto: update
-    defer-datasource-initialization: 'true'
+    defer-datasource-initialization: true
   sql:
     init:
       mode: always

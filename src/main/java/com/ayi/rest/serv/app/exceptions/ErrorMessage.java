@@ -1,11 +1,9 @@
-package com.ayi.rest.serv.app.dtos.response;
+package com.ayi.rest.serv.app.exceptions;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Data;
-
-import javax.validation.constraints.NotNull;
 
 @Data
 @Builder
@@ -13,7 +11,7 @@ import javax.validation.constraints.NotNull;
         value = "ErrorResponseDTO",
         description = "Represents the data returned in case of errors"
 )
-public class ErrorResponseDTO {
+public class ErrorMessage {
 
     @ApiModelProperty(position = 1, notes = "Non negative value, Exception is required.")
     private  String exception;

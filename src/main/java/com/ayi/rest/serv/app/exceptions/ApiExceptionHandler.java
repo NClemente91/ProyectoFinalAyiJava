@@ -1,8 +1,7 @@
-package com.ayi.rest.serv.app.controllers;
+package com.ayi.rest.serv.app.exceptions;
 
-import com.ayi.rest.serv.app.dtos.response.ErrorResponseDTO;
-import com.ayi.rest.serv.app.exceptions.BadRequestException;
-import com.ayi.rest.serv.app.exceptions.NotFoundException;
+import com.ayi.rest.serv.app.exceptions.customsExceptions.BadRequestException;
+import com.ayi.rest.serv.app.exceptions.customsExceptions.NotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +24,8 @@ public class ApiExceptionHandler {
             HttpMessageNotReadableException.class,
     })
     @ResponseBody
-    public ResponseEntity<ErrorResponseDTO> badRequestHandlerException(HttpServletRequest request, Exception exception) {
-        ErrorResponseDTO error = ErrorResponseDTO
+    public ResponseEntity<ErrorMessage> badRequestHandlerException(HttpServletRequest request, Exception exception) {
+        ErrorMessage error = ErrorMessage
                 .builder()
                     .exception(exception.getClass().getSimpleName())
                     .message(exception.getMessage())
@@ -41,8 +40,8 @@ public class ApiExceptionHandler {
             IllegalArgumentException.class,
     })
     @ResponseBody
-    public ResponseEntity<ErrorResponseDTO> notFoundHandlerException(HttpServletRequest request, Exception exception) {
-        ErrorResponseDTO error = ErrorResponseDTO
+    public ResponseEntity<ErrorMessage> notFoundHandlerException(HttpServletRequest request, Exception exception) {
+        ErrorMessage error = ErrorMessage
                 .builder()
                     .exception(exception.getClass().getSimpleName())
                     .message(exception.getMessage())
@@ -55,8 +54,8 @@ public class ApiExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     @ResponseBody
-    public ResponseEntity<ErrorResponseDTO> runtimeHandlerException(HttpServletRequest request, Exception exception) {
-        ErrorResponseDTO error = ErrorResponseDTO
+    public ResponseEntity<ErrorMessage> runtimeHandlerException(HttpServletRequest request, Exception exception) {
+        ErrorMessage error = ErrorMessage
                 .builder()
                 .exception(exception.getClass().getSimpleName())
                 .message(exception.getMessage())

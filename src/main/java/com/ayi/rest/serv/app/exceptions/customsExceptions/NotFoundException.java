@@ -1,4 +1,4 @@
-package com.ayi.rest.serv.app.exceptions;
+package com.ayi.rest.serv.app.exceptions.customsExceptions;
 
 public class NotFoundException extends RuntimeException {
 
