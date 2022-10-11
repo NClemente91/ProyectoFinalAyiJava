@@ -18,12 +18,11 @@ public class ApiExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({
-
+            BadRequestException.class,
             MethodArgumentTypeMismatchException.class,
             MethodArgumentNotValidException.class,
             DataIntegrityViolationException.class,
             HttpMessageNotReadableException.class,
-            BadRequestException.class,
     })
     @ResponseBody
     public ResponseEntity<ErrorResponseDTO> badRequestHandlerException(HttpServletRequest request, Exception exception) {
@@ -54,7 +53,7 @@ public class ApiExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler({Exception.class})
+    @ExceptionHandler(Exception.class)
     @ResponseBody
     public ResponseEntity<ErrorResponseDTO> runtimeHandlerException(HttpServletRequest request, Exception exception) {
         ErrorResponseDTO error = ErrorResponseDTO
