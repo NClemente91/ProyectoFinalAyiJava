@@ -105,10 +105,10 @@ public class CustomerDetailController {
                     message = "Information about an error updating a existing customer detail")
     })
     public ResponseEntity<CustomerDetailResponseDTO> updateOneCustomerDetail(
-            @ApiParam(name = "customerDetail", required = true, value = "CustomerDetail")
-            @Valid @RequestBody CustomerDetailDTO customerDetail,
             @ApiParam(name = "id", required = true, value = "Id", example = "1")
-            @PathVariable("id") Long id) {
+            @PathVariable("id") Long id,
+            @ApiParam(name = "customerDetail", required = true, value = "CustomerDetail")
+            @Valid @RequestBody CustomerDetailDTO customerDetail) {
 
         CustomerDetailResponseDTO customerDetailUpdated = customerDetailService.updateCustomerDetail(customerDetail, id);
 

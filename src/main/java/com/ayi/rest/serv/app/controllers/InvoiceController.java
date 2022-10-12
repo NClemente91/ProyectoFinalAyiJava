@@ -134,10 +134,10 @@ public class InvoiceController {
                     message = "Information about an error updating a existing invoice")
     })
     public ResponseEntity<InvoiceResponseDTO> updateOneInvoice(
-            @ApiParam(name = "invoice", required = true, value = "Invoice")
-            @Valid @RequestBody InvoiceUpdateDTO invoice,
             @ApiParam(name = "id", required = true, value = "Id", example = "1")
-            @PathVariable("id") Long id) {
+            @PathVariable("id") Long id,
+            @ApiParam(name = "invoice", required = true, value = "Invoice")
+            @Valid @RequestBody InvoiceUpdateDTO invoice) {
 
         InvoiceResponseDTO invoiceUpdated = invoiceService.updateInvoice(invoice, id);
 

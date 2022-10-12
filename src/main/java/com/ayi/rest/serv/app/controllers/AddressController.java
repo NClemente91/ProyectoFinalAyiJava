@@ -134,10 +134,10 @@ public class AddressController {
                     message = "Information about an error updating a existing address")
     })
     public ResponseEntity<AddressResponseDTO> updateOneAddress(
-            @ApiParam(name = "address", required = true, value = "Address")
-            @Valid @RequestBody AddressDTO address,
             @ApiParam(name = "id", required = true, value = "Id", example = "1")
-            @PathVariable("id") Long id) {
+            @PathVariable("id") Long id,
+            @ApiParam(name = "address", required = true, value = "Address")
+            @Valid @RequestBody AddressDTO address){
 
         AddressResponseDTO addressUpdated = addressService.updateAddress(address, id);
 

@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
@@ -19,9 +21,8 @@ public class ApiExceptionHandler {
     @ExceptionHandler({
             BadRequestException.class,
             MethodArgumentTypeMismatchException.class,
-            MethodArgumentNotValidException.class,
             DataIntegrityViolationException.class,
-            HttpMessageNotReadableException.class,
+            HttpMessageNotReadableException.class
     })
     @ResponseBody
     public ResponseEntity<ErrorMessage> badRequestHandlerException(HttpServletRequest request, Exception exception) {
@@ -31,6 +32,26 @@ public class ApiExceptionHandler {
                     .message(exception.getMessage())
                     .path(request.getRequestURI())
                     .build();
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseBody
+    public ResponseEntity<ErrorMessage> argumentNotValidHandlerException(HttpServletRequest request, MethodArgumentNotValidException exception) {
+
+        Map<String, String> errors = new HashMap<>();
+
+        exception.getBindingResult().getFieldErrors().forEach(error -> {
+            errors.put(error.getField(), error.getDefaultMessage());
+        });
+
+        ErrorMessage error = ErrorMessage
+                .builder()
+                .exception(exception.getClass().getSimpleName())
+                .message(errors.toString())
+                .path(request.getRequestURI())
+                .build();
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
